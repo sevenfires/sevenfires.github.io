@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://7fires.cn</id>
+    <id>https://www.7fires.cn</id>
     <title>七火小窝</title>
-    <updated>2020-11-25T10:12:05.085Z</updated>
+    <updated>2020-11-25T10:14:06.602Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://7fires.cn"/>
-    <link rel="self" href="https://7fires.cn/atom.xml"/>
+    <link rel="alternate" href="https://www.7fires.cn"/>
+    <link rel="self" href="https://www.7fires.cn/atom.xml"/>
     <subtitle>温故而知新</subtitle>
-    <logo>https://7fires.cn/images/avatar.png</logo>
-    <icon>https://7fires.cn/favicon.ico</icon>
+    <logo>https://www.7fires.cn/images/avatar.png</logo>
+    <icon>https://www.7fires.cn/favicon.ico</icon>
     <rights>All rights reserved 2020, 七火小窝</rights>
     <entry>
         <title type="html"><![CDATA[iiii]]></title>
-        <id>https://7fires.cn/post/iiii/</id>
-        <link href="https://7fires.cn/post/iiii/">
+        <id>https://www.7fires.cn/post/iiii/</id>
+        <link href="https://www.7fires.cn/post/iiii/">
         </link>
         <updated>2020-11-25T10:11:54.000Z</updated>
         <content type="html"><![CDATA[<p>iiiii</p>
@@ -21,8 +21,8 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[uuuu]]></title>
-        <id>https://7fires.cn/post/uuuu/</id>
-        <link href="https://7fires.cn/post/uuuu/">
+        <id>https://www.7fires.cn/post/uuuu/</id>
+        <link href="https://www.7fires.cn/post/uuuu/">
         </link>
         <updated>2020-11-24T16:34:11.000Z</updated>
         <content type="html"><![CDATA[<p>TRYRHBRTHBTRHTRH</p>
@@ -30,8 +30,8 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[xxxx]]></title>
-        <id>https://7fires.cn/post/xxxx/</id>
-        <link href="https://7fires.cn/post/xxxx/">
+        <id>https://www.7fires.cn/post/xxxx/</id>
+        <link href="https://www.7fires.cn/post/xxxx/">
         </link>
         <updated>2020-11-24T16:01:27.000Z</updated>
         <content type="html"><![CDATA[<p>tttttt<br>
@@ -40,8 +40,8 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://7fires.cn/post/hello-gridea/</id>
-        <link href="https://7fires.cn/post/hello-gridea/">
+        <id>https://www.7fires.cn/post/hello-gridea/</id>
+        <link href="https://www.7fires.cn/post/hello-gridea/">
         </link>
         <updated>2018-12-11T16:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
