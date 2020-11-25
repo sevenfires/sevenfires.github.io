@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>检查Prefab或场景物件是否丢失脚本 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="在做Unity的项目过程中，我们经常会创建一堆脚本，然后删除脚本或修改脚本名字。
+单纯的删除脚本或者修改脚本，本身不会造成工程的编译失败、游戏运行不起来，但是如果有Prefab或场景物件有使用到这些脚本，就会导致在运行时报一个警告，还会看到..." />
+    <meta name="keywords" content="UnityEditor,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">检查Prefab或场景物件是否丢失脚本</h2>
+            <div class="post-date">2015-11-12</div>
+            
+            <div class="post-content" v-pre>
+              <p>在做Unity的项目过程中，我们经常会创建一堆脚本，然后删除脚本或修改脚本名字。</p>
+<p>单纯的删除脚本或者修改脚本，本身不会造成工程的编译失败、游戏运行不起来，但是如果有Prefab或场景物件有使用到这些脚本，就会导致在运行时报一个警告，还会看到Missing(Mono Script)这样的提示，如下<br>
+<img src="https://www.7fires.cn/post-images/1606307019026.png" alt="" loading="lazy"></p>
+<p>久而久之，看到多了也就烦了，今天我们就提供一段小脚本来检查这些缺失的脚本引用，代码如下：</p>
+<pre><code>public static void CheckReferences() {
+    GameObject go = Selection.activeGameObject;
+    var monoBehaviours = go.GetComponentsInChildren&lt;MonoBehaviour&gt;(true);
+    foreach (MonoBehaviour monoBehaviour in monoBehaviours) {
+        if (monoBehaviour == null) {
+            Debug.LogError(go.name + &quot;有缺失的脚本&quot;);
+        }
+    }
+}
+</code></pre>
+<p>这段脚本，不仅可以检查Prefab中是否有缺失的脚本，也可以检查场景中的物件。</p>
+<p>当然方括号中的MonoBehaviour也可以替换成其他的脚本组件，比如Behaviour，Component等，就看你要查找哪一类组件。</p>
+<p>查找到丢失脚本的物件后，我们是否需要手动来删除呢？实际不用，有脚本来帮忙搞定，我们下篇来分享。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/143/">
+                  <h3 class="post-title">
+                    UnityEditor中Selection类的解析和使用
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Unity Shader 之 Surface 概览 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="表面着色器放在CGPROGRAM .. ENDCG块里面，就像其他的着色器一样。区别是：
+它必须嵌在子着色器(SubShader)块里面。而不是Pass块里面。表面着色器( Surface shader)将在多重通道(multiple pa..." />
+    <meta name="keywords" content="Shader,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Unity Shader 之 Surface 概览</h2>
+            <div class="post-date">2015-05-15</div>
+            
+            <div class="post-content" v-pre>
+              <p>表面着色器放在CGPROGRAM .. ENDCG块里面，就像其他的着色器一样。区别是：</p>
+<p>它必须嵌在子着色器(SubShader)块里面。而不是Pass块里面。表面着色器( Surface shader)将在多重通道(multiple passes)内编译自己。</p>
+<p>它使用的 #pragma surface…指令，以声明它是一个表面着色器(surface shader)。</p>
+<pre><code>#pragma surface surfaceFunction lightModel [optionalparams]
+</code></pre>
+<p>surfaceFunction – 表示Cg函数中有表面着色器(surface shader)代码。这个函数的格式应该是这样：void surf (Input IN,inout SurfaceOutput o)， Input是你自己定义的结构。Input结构中应该包含所有纹理坐标(texture coordinates)和和表面函数(surfaceFunction)所需要的额外的必需变量。</p>
+<p>lightModel -在光照模式中使用。内置的是Lambert (diffuse)和 BlinnPhong (specular)。如果想编写自己的光照模式，请参考：自定义光照模式。</p>
+<h1 id="optionalparams可选参数">Optionalparams可选参数：</h1>
+<ul>
+<li>alpha 透明( Alpha)混合模式。使用它可以写出半透明的着色器。</li>
+<li>alphatest:VariableName 透明( Alpha)测试模式。使用它可以写出 镂空效果的着色器。镂空大小的变量(VariableName)是一个float型的变量。</li>
+<li>vertex:VertexFunction 自定义的顶点函数(vertex function)。请参考范例：树皮着色器(Tree Bark shader)。</li>
+<li>finalcolor:ColorFunction 自定义的最终颜色函数(final color function)。 请参考范例：表面着色器例子(Surface Shader Examples)。</li>
+<li>exclude_path:prepass or exclude_path:forward 使用指定的渲染路径，不需要生成通道。</li>
+<li>addshadow 添加阴影投射 &amp; 收集通道(collector passes)。通常用自定义顶点修改，使阴影也能投射在任何程序的顶点动画上。</li>
+<li>dualforward 在正向(forward)渲染路径中使用双重光照贴图(dual lightmaps)。</li>
+<li>fullforwardshadows 在正向(forward)渲染路径中支持所有阴影类型。</li>
+<li>decal:add 添加贴花着色器(decal shader) (例如： terrain AddPass)。</li>
+<li>decal:blend 混合半透明的贴花着色器(Semitransparent decal shader)。</li>
+<li>softvegetation 使表面着色器(surface shader)仅能在Soft Vegetation打开时渲染。</li>
+<li>noambient 不适用于任何环境光照(ambient lighting)或者球面调和光照(spherical harmonics lights)。</li>
+<li>novertexlights 在正向渲染(Forward rendering)中不适用于球面调和光照(spherical - harmonics lights)或者每个顶点光照(per-vertex lights)。</li>
+<li>nolightmap 在这个着色器上禁用光照贴图(lightmap)。(适合写一些小着色器)</li>
+<li>nodirlightmap 在这个着色器上禁用方向光照贴图(directional lightmaps)。 (适合写一些小着色器)。</li>
+<li>noforwardadd 禁用正向渲染添加通道(Forwardrendering additive pass)。 这会使这个着色器支持一个完整的方向光和所有光照的per-vertex/SH计算。(也是适合写一些小着色器).</li>
+<li>approxview 着色器需要计算标准视图的每个顶点(per-vertex)方向而不是每个像索(per-pixel)方向。 这样更快，但是视图方向不完全是当前摄像机(camera) 所接近的表面。</li>
+<li>halfasview 在光照函数(lighting function)中传递进来的是half-direction向量，而不是视图方向(view-direction)向量。 Half-direction会计算且会把每个顶点(per vertex)标准化。这样做会很快，但不完全准确。</li>
+</ul>
+<h1 id="surface-shader-input-structure-表面着色器输入结构">Surface Shader input structure 表面着色器输入结构</h1>
+<p>Input 这个输入结构通常拥有着色器需要的所有纹理坐标(texture coordinates)。纹理坐标(Texture coordinates)必须被命名为“uv”后接纹理(texture)名字。(或者uv2开始，使用第二纹理坐标集)</p>
+<p>可以在输入结构中附加一些值：</p>
+<ul>
+<li>float3 viewDir 视图方向( view direction)值。为了计算视差效果(Parallax effects)，边缘光照(rim lighting)等，需要包含视图方向( view direction)值。</li>
+<li>float4 with COLOR semantic每个顶点(per-vertex)颜色的插值。</li>
+<li>float4 screenPos 屏幕空间中的位置。 为了反射效果，需要包含屏幕空间中的位置信息。比如在Dark Unity中所使用的 WetStreet着色器。</li>
+<li>float3 worldPos 世界空间中的位置。</li>
+<li>float3 worldRefl 世界空间中的反射向量。如果表面着色器(surface shader)不写入法线(o.Normal)参数，将包含这个参数。 请参考这个例子：Reflect-Diffuse 着色器。</li>
+<li>float3 worldNormal 世界空间中的法线向量(normal vector)。如果表面着色器(surface shader)不写入法线(o.Normal)参数，将包含这个参数。</li>
+<li>float3 worldRefl; INTERNAL_DATA 世界空间中的反射向量。如果表面着色器(surface shader)不写入法线(o.Normal)参数，将包含这个参数。为了获得基于每个顶点法线贴图( per-pixel normal map)的反射向量(reflection vector)需要使用世界反射向量(WorldReflectionVector (IN, o.Normal))。请参考这个例子： Reflect-Bumped着色器。</li>
+<li>float3 worldNormal; INTERNAL_DATA 世界空间中的法线向量(normal vector)。如果表面着色器(surface shader)不写入法线(o.Normal)参数，将包含这个参数。为了获得基于每个顶点法线贴图( per-pixel normal map)的法线向量(normal vector)需要使用世界法线向量(WorldNormalVector (IN, o.Normal))。</li>
+</ul>
+<p>表面着色器(Surface Shader)的标准输出结构是这样的：</p>
+<pre><code>struct SurfaceOutput
+{
+half3 Albedo;             //反射率
+half3 Normal;            //法线
+half3 Emission;         //自发光，用于增强物体自身的亮度，使之看起来好像可以自己发光
+half Specular;            //镜面
+half Gloss;                  //光泽
+half Alpha;                 //透明
+};
+</code></pre>
+<h1 id="表面着色器中的自定义光照模式">表面着色器中的自定义光照模式</h1>
+<p>当你在编写表面着色器的时候，你是描述一个表面的属性(反射率颜色，法线，…)和通过计算光照模式来计算灯光的相互作用。内置的光照模式是 Lambert (漫反射光diffuse lighting) 和 BlinnPhong (镜面反射光(高光)specular lighting)。</p>
+<p>有时你也许会想使用自定义光照模式( custom lighting model)。这在表面着色器(surface shader)中是可以做到的。光照模式(lighting model)无外乎是几个Cg/HLSL函数的组合。内置的 Lambert 和 BlinnPhong定义在 Lighting.cginc文件中。(这个文件的位置在 windows系统下：{unity安装路径}/Data /CGIncludes /Lighting.cginc，Mac系统下： /Applications/Unity/Unity.app/Contents/CGIncludes/Lighting.cginc)</p>
+<p>光照模式是一个以Lighting开头与名字组合在一起的合乎规范的函数。你可以在你的着色器文件(shader file)或导入文件(included files)中的任何一个地方声明它。这个函数是：</p>
+<ol>
+<li>half4 LightingName (SurfaceOutput s, half3 lightDir, half atten);这是在正向渲染路径(forward rendering path)中使用的光照模式。它不是取决于视图方向的(view direction)。例如：漫反射(diffuse)。</li>
+<li>half4 LightingName (SurfaceOutput s, half3 lightDir, half3 viewDir, half atten);这是在正向渲染路径(forward rendering path)中使用的光照模式。它取决于视图的方向(view direction)。</li>
+<li>half4 LightingName_PrePass (SurfaceOutput s, half4 light); 这是在延时光照路径(deferred lighting path)中使用的。<br>
+请注意：你不要声明所有的函数。一个光照模式(lighting model)要么使用视图方向(view direction)要么不使用。同样的，如果光照模式(lighting model)在延时光照(deferred lighting)中不工作,你只要不声明成 _PrePass(第三个)函数就好了。那么所有的着色器在使用它的时候只会在正向渲染(forward rendering)中编译。</li>
+</ol>
+<p>当定向解码光照贴图用于向前/延迟光照中的光照函数，或类似的函数中时，需要进行定制。使用下面函数中的一个取决于你的光照模式(light model)是否依赖视图方向(view direction)。这两个函数将自动处理正向和延时光照路径(forward and deferred lighting rendering paths)。</p>
+<ol>
+<li>half4 LightingName_DirLightmap (SurfaceOutput s, fixed4 color, fixed4 scale, bool surfFuncWritesNormal);这是使用的不依赖于视图方向(view direction)的光照模式(light model)。例如：漫反射(diffuse)。</li>
+<li>half4 LightingName_DirLightmap (SurfaceOutput s, fixed4 color, fixed4 scale, half3 viewDir, bool surfFuncWritesNormal, out half3 specColor);这是使用的依赖于视图方向(view direction)的光照模式(light model)。<br>
+<a href="http://game.ceeger.com/Components/SL-SurfaceShaderLightingExamples.html">Surface Shader Lighting Examples</a> 表面着色器光照示例</li>
+</ol>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/sD0POt5V3/" class="tag">
+                    Shader
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

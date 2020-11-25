@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Unity Shader 之 ShaderLab概览 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="最简单：
+Shader “name” { [Properties] Subshaders [Fallback] }
+
+Shader “name”
+
+{
+    Properties  // Properties { Property [Pr..." />
+    <meta name="keywords" content="Shader,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Unity Shader 之 ShaderLab概览</h2>
+            <div class="post-date">2015-05-15</div>
+            
+            <div class="post-content" v-pre>
+              <p>最简单：</p>
+<pre><code>Shader “name” { [Properties] Subshaders [Fallback] }
+</code></pre>
+<pre><code>Shader “name”
+
+{
+    Properties  // Properties { Property [Property …] }
+    {
+        name (“display name“, Range (min, max)) = number
+        name (“display name“, Color)  = (number,number,number,number)
+        name (“display name“, 2D)    = “white“|”black“|”gray“|”bump” { TexGen  ObjectLinear|EyeLinear|SphereMap|CubeReflect|CubeNormal LightmapMode}
+        name (“display name“, Rect)  = “white“|”black“|”gray“|”bump” { TexGen  ObjectLinear|EyeLinear|SphereMap|CubeReflect|CubeNormal LightmapMode}
+        name (“display name“, Cube)  = “white“|”black“|”gray“|”bump” { TexGen  ObjectLinear|EyeLinear|SphereMap|CubeReflect|CubeNormal LightmapMode}
+        name (“display name“, Float)  = number
+        name (“display name“, Vector) = (number,number,number,number)
+}
+</code></pre>
+<p>//当Unity选择用于渲染的子着色器时，它为每一个被定义的通道渲染一次对象（可能会更多，这取决于光线的交互作用）</p>
+<pre><code>Subshader  //Subshader { [Tags] [CommonState] Passdef [Passdef …] }
+</code></pre>
+<pre><code>{
+       Tags  //Tags { “TagName1” = “Value1” “TagName2” = “Value2” }
+       {
+              //Rendering Order – Queue tag渲染次序 – 队列 标签
+              “ RenderType ” = “Value1”
+                Opaque:用于大多数着色器（法线着色器、自发光着色器、反射着色器以及地形的着色器）。
+                Transparent:用于半透明着色器（透明着色器、粒子着色器、字体着色器、地形额外通道的着色器）。
+                TransparentCutout:蒙皮透明着色器（Transparent Cutout，两个通道的植被着色器）。
+                Background:天空盒着色器。
+                Overlay:光晕着色器、闪光着色器。
+                TreeOpaque:地形引擎中的树皮。
+                TreeTransparentCutout:地形引擎中的树叶。
+                TreeBillboard:地形引擎中的广告牌树。
+                Grass:地形引擎中的草。
+                GrassBillboard:地形引擎何中的广告牌草。
+
+//使用Queue 标签决定对象被渲染的次序。着色器决定它所归属的对象的渲染队列，任何透明渲染器可以通过这个办法确认可以在所有不透明对象渲染后再进行渲染
+
+//在Unity实现中每一个队列都被一个整数的索引值所代表。后台为1000，几何体为2000，透明为3000，叠加层为4000
+
+            “ Queue ” = “Value2 + num”
+            //有四种预定义的渲染队列，在预定义队列之间还可以定义更多队列
+                Background                        后台 – 这个渲染队列在所有队列之前被渲染，被用于渲染天空盒之类的对象。
+                Geometry (default)  几何体（缺省） – 这个队列被用于大多数对象。 不透明的几何体使用这个队列。
+                Transparent                        透明 – 这个渲染队列在几何体队列之后被渲染，采用由后到前的次序。
+任何采用alpha混合的对象（不对深度缓冲产生写操作的着色器）应该在这里渲染（玻璃，粒子效果）
+                Overlay                                覆盖 – 这个渲染队列被用于实现叠加效果。任何需要最后渲染的对象应该放置在此处。（如镜头光晕）
+     }
+
+       Pass  // Pass { [Name and Tags] [RenderSetup] [TextureSetup] }
+       {
+
+                // [Name and Tags] 一个通道能定义它的Name 和任意数量的Tags （用于向渲染引擎传递通道的意图的名称/值的字符串）
+                Name //Name “PassName” //为当前通道命名 PassName
+                Tags  //Tags { “TagName1” = “Value1” “TagName2” = “Value2” }//指定TagName1 的值为 Value1 ,TagName2 的值为 Value2 你可以指定很多你喜欢的标签
+                {
+                     “LightMode” = “Value1“   //LightMode 标签定义了光照观点中的pass的任务。查阅render pipeline了解更多细节。这些标签很少手动使用。
+//常用的shader 需要与光照进行互动的Shader写成表面着色器 然后在去关联那些细节
+
+                LightMode 的可选值：
+                Always:总是渲染。没有光照应用。
+                ForwardBase:用于正向渲染,环境主要方向灯和定点光/SH 等的应用
+                ForwardAdd:用于正向渲染，附加的像素光被应用，每个光照一个pass
+                PrepassBase:用于延迟光照，渲染法线/镜面指数。lor function)。
+                PrepassFinal:用于延迟光照，通过结合纹理，光照和自发光渲染最终颜色
+                Vertex:用于顶点光照渲染，当物体没有光照映射时，所有顶点光照被应用
+                VertexLMRGBM:用于顶点光照渲染，当物体有光照映射的时候使用顶点光照渲染。在平台上光照映射是RGBM 编码
+                VertexLM:用于顶点光照渲染，当物体有光照映射的时候使用顶点光照渲染。在平台上光照映射是double-LDR 编码（移动平台，及老式台式CPU）
+                ShadowCaster:将物体当做阴影产生者来渲染
+                ShadowCollector:为了正向渲染对象的路径，将对象的阴影收集到屏幕空间缓冲区中。
+
+                “RequireOptions” = “Value2”  //当一些外部条件得到满足时 这个pass才渲染，这是通过使用RequireOptions标签，它的值是一个空格分割的字符串，
+                //目前由Unity3d支持的选项是：如果在Quality Settings中开启（Edit-&gt;Project Settings-&gt;Quality）渲染软植被则pass可以渲染
+              }
+
+ 
+
+              //[RenderSetup]
+Color value                               //设置当顶点光照关闭时所使用的颜色, 设定对象的纯色。
+//颜色即可以是括号中的四值（RGBA），也可以是被方框包围的颜色属性名。
+
+Material  //Material { Material Block }   //定义一个使用顶点光照管线的材质，参考material页面。材质块被用于定义对象的材质属性
+
+        {     
+            //打在对象上的完整光照颜色最终是：Ambient * RenderSettings ambient setting + (Light Color * Diffuse + Light Color * Specular) + Emission
+        Diffuse Color               //漫反射颜色构成。这是对象的基本颜色。Diffuse [_Color] | Diffuse (1,1,1,1)
+        Ambient Color            //环境色颜色构成.这是当对象被RenderSettings. 中设定的环境色所照射时对象所表现的颜色。
+        Specular Color            //对象反射高光的颜色。
+        Shininess Number     //加亮时的光泽度，在0和1之间。0的时候你会发现更大的高亮也看起来像漫反射光照，1的时候你会获得一个细微的亮斑。
+        Emission Color            //自发光颜色，当不被任何光照所照到时，对象的颜色
+        }
+
+Lighting On | Off                      //开启或关闭顶点光照，参考material页面。
+//定义材质块中的设定是否有效，你必须使用Lighting On 命令开启光照，而颜色则通过Color命令直接给出。
+
+SeparateSpecular On | Off                                  //开启或关闭顶点光照相关的平行高光颜色， 参考material页面。
+
+                    //这个命令会添加高光光照到着色器通道的末尾，因此贴图对高光没有影响。只在光照开启时有效。
+
+ColorMaterial AmbientAndDiffuse | Emission             //当计算顶点光照时使用每顶点颜色， 参考material页面。
+
+                    //使用每顶点的颜色替代材质中的颜色集。AmbientAndDiffuse替代材质的阴影光和漫反射值;Emission 替代材质中的光发射值
+
+Cull Back | Front | Off               //设置多边形剔除模式, 控制几何体的那一面会被剔除（不绘制）
+//Back不绘制背离观察者的几何体面。
+//Front 不绘制面向观察者的几何体面，用于由内自外的旋转对象
+//Off 显示所有面。用于特殊效果。
+
+ZWrite On | Off                         //设置深度写模式控制是否将来对象的像素写入深度缓冲（默认开启），如果你正绘制纯色物体，将此项打开。
+//如果你正绘制半透明效果，关闭深度缓冲，更多细节如下
+
+ZTest Less | Greater | LEqual | GEqual | Equal | NotEqual | Always         //设置深度测试模式, 深度测试如何执行。
+//缺省是LEqual （绘制和存在的对象一致或是在其中的对象；隐藏他们背后的对象）
+
+Offset OffsetFactor , OffsetUnits       //设置深度偏移
+//允许你定义用两个参数深度偏移。因子和单位。Factor 缩放Z的最大斜率，几何体的X和Y也一样，units缩放可计算的深度缓冲值。
+//这允许你迫使一个几何体绘制在另一个的上层，尽管他们实际上是在同一个位置。
+//例如偏移0，-1使得靠近摄像机的几何体忽略几何体的斜率，而偏移-1,-1则会几何体在一个几乎擦过的角度被观察使看起来更近些。
+//注意如果你使用片段程序，着色器雾设定仍然会被应用。如果平台没有对固定管线的雾功能支持，Unity会实时补上着色器以支持需要的雾模式。
+
+        Fog //Fog { Fog Commands }        //设置雾参数
+        {
+                Mode Off | Global | Linear | Exp | Exp2    //定义雾模式。缺省是全局的，依据雾在渲染设定中是否打开确定可从无变化到平方值
+                Color ColorValue                                      //设定雾的颜色
+                Density FloatValue                                  //以指数的方式 设定 雾的密度
+                Range FloatValue , FloatValue                  //为linear的雾设定远近距离
+        }
+                AlphaTest (Less | Greater | LEqual | GEqual | Equal | NotEqual | Always) CutoffValue         //开启alpha测试
+                //AlphaTest Off 渲染所有像素（缺省）
+                //AlphaTest comparison AlphaValue设定透明度测试只渲染在某一确定范围内的透明度值的像素。
+
+                Comparison is one of the following words:
+                Greater        Only render pixels whose alpha is greater than AlphaValue. 大于
+                GEqual         Only render pixels whose alpha is greater than or equal to AlphaValue. 大于等于
+                Less Only    render pixels whose alpha value is less than AlphaValue. 小于
+                LEqual          Only render pixels whose alpha value is less than or equal to from AlphaValue. 小于等于
+                Equal            Only render pixels whose alpha value equals AlphaValue. 等于
+                NotEqual      Only render pixels whose alpha value differs from AlphaValue. 不等于
+                Always         Render all pixels. This is functionally equivalent to AlphaTest Off. 渲染所有像素，等于关闭透明度测试AlphaTest Off
+                Never           Don’t render any pixels. 不渲染任何像素
+
+ 
+
+Blend SourceBlendMode DestBlendMode                              //设置alpha混合模式
+            Blend Off//关闭混合//
+            Blend SrcFactor DstFactor//配置并启动混合。产生的颜色被乘以SrcFactor. 已存在于屏幕的颜色乘以DstFactor，并且两者将被叠加在一起。
+            Blend SrcFactor DstFactor, SrcFactorA DstFactorA//同上，但是使用不同的要素来混合alpha通道
+
+            BlendOp Min | Max | Sub | RevSub//不是添加混合颜色在一起，而是对它们做不同的操作。
+
+            以下所有属性对SrcFactor或DstFactor都可用。Source指的是被计算的颜色，Destination是已经在屏幕上的颜色。
+            One                                    值为1，使用此设置来让源或是目标颜色完全的通过。
+            Zero                                   值为0，使用此设置来删除源或目标值。
+            SrcColor                            此阶段的值是乘以源颜色的值。
+            SrcAlpha                           此阶段的值是乘以源alpha的值。
+            DstColor                            此阶段的值是乘以帧缓冲区源颜色的值。
+            DstAlpha                           此阶段的值是乘以帧缓冲区源alpha的值。
+            OneMinusSrcColor           此阶段的值是乘以(1 – source color)
+            OneMinusSrcAlpha          此阶段的值是乘以(1 – source alpha)
+            OneMinusDstColor           此阶段的值是乘以(1 – destination color)
+            OneMinusDstAlpha          此阶段的值是乘以(1 – destination alpha)
+
+            以下是最常见的混合类型：
+            Blend SrcAlpha OneMinusSrcAlpha     // Alpha blending
+            Blend One One                       // Additive
+            Blend One OneMinusDstColor          // Soft Additive
+            Blend DstColor Zero                 // Multiplicative
+            Blend DstColor SrcColor             // 2x Multiplicative
+
+            ColorMask RGB | A | 0 | any combination of R, G, B, A //设置颜色写遮罩。设置为0将关闭所有颜色通道的渲染
+
+            //这里有2个典型的情况可以使用BindChannels。
+            //需要考虑顶点颜色的着色器。使用两个UV组的着色器。
+            BindChannels //BindChannels { Bind “source“, target }
+            {
+
+                Source 可以是下面其中一个
+                Vertex: vertex position 顶点：顶点的位置
+                Normal: vertex normal 法线：顶点的法线
+                Tangent: vertex tangent 切线：顶点的切线
+                Texcoord: primary UV coordinate 主要的UV坐标
+                Texcoord1: secondary UV coordinate 次要的UV坐标
+                Color: per-vertex color 颜色：每个顶点颜色
+
+ 
+
+                Target  Target可以是下面其中的一个：
+                Vertex: vertex position 顶点：顶点的位置
+                Normal: vertex normal 法线：顶点的法线
+                Tangent: vertex tangent 切线：顶点的切线
+                Texcoord0, Texcoord1, …: texture coordinates for corresponding texture stage 各个纹理处理阶段的纹理坐标
+                Texcoord: texture coordinates for all texture stages 所有纹理处理阶段的纹理坐标
+                Color: vertex color 颜色：顶点颜色
+}
+Stencil
+{
+       Ref referenceValue:           The value to be compared against (if Comp is anything else than always) and/or the value to be written to the buffer
+(if either Pass, Fail or ZFail is set to replace). 0–255 integer.
+ReadMask readMask:         An 8 bit mask as an 0–255 integer, used when comparing the reference value with the contents of the buffer
+(referenceValue &amp; readMask) comparisonFunction (stencilBufferValue &amp; readMask). Default: 255.
+    WriteMask writeMask:      An 8 bit mask as an 0–255 integer, used when writing to the buffer. Default: 255.
+    Comp comparisonFunction:      The function used to compare the reference value to the current contents of the buffer. Default: always.
+    Pass stencilOperation:        What to do with the contents of the buffer if the stencil test (and the depth test) passes. Default: keep.
+    Fail stencilOperation:         What to do with the contents of the buffer if the stencil test fails. Default: keep.
+ZFail stencilOperation:       What to do with the contents of the buffer if the stencil test passes, but the depth test fails. Default:
+keep,Comp,Pass,Fail and ZFail will be applied to the front-facing geometry, unless Cull Front is specified, in which case it’s back-facing geometry.
+You can also explicitly specify the two-sided stencil state by defining CompFront, PassFront, FailFront, ZFailFront (for front-facing geometry),
+and CompBack, PassBack, FailBack, ZFailBack (for back-facing geometry).
+
+ 
+
+                     Comparison function is one of the following:
+
+                    Greater        Only render pixels whose reference value is greater than the value in the buffer.
+                    GEqual         Only render pixels whose reference value is greater than or equal to the value in the buffer.
+                    Less Only    render pixels whose reference value is less than the value in the buffer.
+                    LEqual          Only render pixels whose reference value is less than or equal to the value in the buffer.
+                    Equal            Only render pixels whose reference value equals the value in the buffer.
+                    NotEqual      Only render pixels whose reference value differs from the value in the buffer.
+                    Always         Make the stencil test always pass.
+                    Never           Make the stencil test always fail.
+
+                    Stencil operation is one of the following:
+                    Keep             Keep the current contents of the buffer.
+                    Zero              Write 0 into the buffer.
+                    Replace        Write the reference value into the buffer.
+                    IncrSat        Increment the current value in the buffer. If the value is 255 already, it stays at 255.
+                    DecrSat        Decrement the current value in the buffer. If the value is 0 already, it stays at 0.
+                    Invert          Negate all the bits.
+                    IncrWrap     Increment the current value in the buffer. If the value is 255 already, it becomes 0.
+                    DecrWrap    Decrement the current value in the buffer. If the value is 0 already, it becomes 255.
+
+}
+
+ 
+
+//[TextureSetup]
+//完成渲染设定后，你能指定一定数量的纹理和当使用 SetTexture 命令时所采用的混合模式：
+//纹理设置 配置了 固定函数多纹理管线，当自定义fragment shaders 被使用时，将忽略这个设置
+SetTexture texture property { [Combine options] }
+SetTexture  [TexturePropertyName] //SetTexture [TexturePropertyName] { Texture Block }
+//分配一个纹理，TextureName必须定义为一个纹理属性。如何应用纹理被定义在TextrueBlock中
+
+//SetTexture [_MainTex] { combine previous * texture, previous + texture }
+//纹理块控制纹理如何被应用。在纹理块中能执行3种命令：合并，矩阵和不变色。
+
+{
+
+                     combine src1 * src2//将源1和源2的元素相乘。结果会比单独输出任何一个都要暗
+                    combine src1 + src2//将将源1和源2的元素相加。结果会比单独输出任何一个都要亮
+                    combine src1 – src2//源1 减去 源2
+                    combine src1 +- src2//先相加，然后减去0.5（添加了一个符号）
+                    combine src1 lerp (src2) src3//使用源2的透明度通道值在源3和源1中进行差值，注意差值是反向的：当透明度值是1是使用源1，透明度为0时使用源3
+                    combine src1 * src2 + src3//源1和源2的透明度相乘，然后加上源3
+                    combine src1 * src2 +- src3//源1和源2的透明度相乘，然后和源3做符号加
+                    combine src1 * src2 – src3//源1和源2的透明度相乘，然后和源3相减
+
+                     //所有src属性都可以是previous, constant, primary or texture其中的一个。
+                    Previous 上一次SetTexture的结果
+                    Primary 来自光照计算的颜色或是当它绑定时的顶点颜色
+                    Texture 在SetTexture中被定义的纹理的颜色
+                    Constant 被ConstantColor定义的颜色
+
+上述的公式都均能通过关键字 Double 或是 Quad 将最终颜色调高亮度2倍或4倍。
+
+所有src属性能通过跟随 alpha 标签来表示只取用alpha通道。
+
+ConstantColor color //定义在combine命令中能被使用的不变颜色
+matrix [MatrixPropertyName]//使用给定矩阵变换纹理坐标
+
+}
+
+}
+
+UsePass //UsePass “Shader/Name” 插入所有来自给定着色器中的给定名字的通道。Shader/Name包含了通过斜杠字符分割的着色器的名字和通道的名字
+//UsePass “Specular/BASE” 所有通道名字都是大写开头，因此UsePass必须使用大写开头的名字来书写索引
+
+ 
+
+GrabPass { }|GrabPass { “TextureName” }
+//GrabPass {} 能捕获当前屏幕的内容到一个纹理中。纹理能在后续通道中通过 _GrabTexture 进行访问。
+//注意：这种形式的捕获通道将在每一个使用该通道的对象渲染过程中执行昂贵的屏幕捕获操作
+// GrabPass { “TextureName” } 能捕获屏幕内容到一个纹理中，但只会在每帧中处理第一个使用给定纹理名的纹理的对象的渲染过程中产生捕获操作。
+
+纹理在未来的通道中可以通过给定的纹理名访问。当你在一个场景中拥有多个使用GrabPass的对象时将提高性能。
+
+ 
+
+}
+
+[Fallback] // Fallback标志的功能和将另一个着色器的所有子着色器拷贝到标志所在位置所起的功能相同
+
+Fallback “name”//退回到给定名称的着色器
+
+Fallback Off//显式声明没有fallback并且不会打印任何警告，甚至没有子着色器会被运行
+
+CustomEditor “name”
+
+Category 分类//分类是如下任意命令的逻辑组。大多数情况下是被用于继承渲染状态。
+//例如，你的着色器可以有多个子着色器，他们都需要关闭雾效果，附加的混合，等等。你能在这些情况使用种类：
+
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/sD0POt5V3/" class="tag">
+                    Shader
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/17/">
+                  <h3 class="post-title">
+                    Unity Shader 之 Surface 概览
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

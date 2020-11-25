@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.7fires.cn</id>
     <title>七火小窝</title>
-    <updated>2020-11-25T11:10:23.539Z</updated>
+    <updated>2020-11-25T13:53:28.338Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.7fires.cn"/>
     <link rel="self" href="https://www.7fires.cn/atom.xml"/>
@@ -11,88 +11,1273 @@
     <icon>https://www.7fires.cn/favicon.ico</icon>
     <rights>All rights reserved 2020, 七火小窝</rights>
     <entry>
-        <title type="html"><![CDATA[555]]></title>
-        <id>https://www.7fires.cn/post/555/</id>
-        <link href="https://www.7fires.cn/post/555/">
+        <title type="html"><![CDATA[Unity 特殊文件夹及脚本编译顺序]]></title>
+        <id>https://www.7fires.cn/post/217/</id>
+        <link href="https://www.7fires.cn/post/217/">
         </link>
-        <updated>2020-11-25T10:19:17.000Z</updated>
-        <content type="html"><![CDATA[<p>retret<br>
-rtey<br>
-tr<br>
-y<br>
-tr<br>
-y</p>
-<p>try</p>
-<p>tr<br>
-y<br>
-try<br>
-rt<br>
-y<br>
-rt<br>
-y<br>
-rt<br>
-y<br>
-rt</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[iiii]]></title>
-        <id>https://www.7fires.cn/post/iiii/</id>
-        <link href="https://www.7fires.cn/post/iiii/">
-        </link>
-        <updated>2020-11-25T10:11:54.000Z</updated>
-        <content type="html"><![CDATA[<p>iiiii</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[uuuu]]></title>
-        <id>https://www.7fires.cn/post/uuuu/</id>
-        <link href="https://www.7fires.cn/post/uuuu/">
-        </link>
-        <updated>2020-11-24T16:34:11.000Z</updated>
-        <content type="html"><![CDATA[<p>TRYRHBRTHBTRHTRH</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[xxxx]]></title>
-        <id>https://www.7fires.cn/post/xxxx/</id>
-        <link href="https://www.7fires.cn/post/xxxx/">
-        </link>
-        <updated>2020-11-24T16:01:27.000Z</updated>
-        <content type="html"><![CDATA[<p>tttttt<br>
-啥的哈哈</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://www.7fires.cn/post/hello-gridea/</id>
-        <link href="https://www.7fires.cn/post/hello-gridea/">
-        </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+        <updated>2017-04-17T11:12:19.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="一-特殊文件夹">一、特殊文件夹</h1>
+<p>通常我们会为我们创建的文件夹去上任何喜欢的名称，但是有一些文件夹名称会被Unity解释为一个指令，文件夹中的内容会被Unity特殊对待。例如，必须将编辑器脚本放置在名为Editor的文件夹中，这样这些脚本才能正常运行。</p>
+<h2 id="11-assets">1.1、Assets</h2>
+<p>该文件夹是Unity工程使用到的资源的根目录。编辑器中，Project窗口直接一一对应的显示这个目录下的资源。大多数的API函数都是假定一切都是位于Assets文件夹中的，我们不需要明确的提及它。但是某些函数需要将Assets文件夹作为路径名的一部分（例如AssetDatabase中的某些函数）。</p>
+<h2 id="12-editor">1.2、Editor</h2>
+<p>放在该文件夹或其中的子文件中的所有脚本都被视为编辑器脚本，而不是运行时脚本。这些脚本被设计为在开发期间向Unity本身添加功能的脚本，并且不能运行在已经发布的游戏上。可以在项目中使用多个Editor文件夹，但是在一些特殊的文件夹下面会影响他们自身的编译顺序。可以使用Editor脚本中的EditorGUIUtility.Load函数将放在Editor文件夹下面的Resources文件中的资源加载进来，这些资源只能通过编辑器脚本加载，在编译时这些资源会被删除。</p>
+<p>注意：如果脚本放在编辑器文件夹中并且派生自MonoBehaviour组件，Unity不允许把这类脚本挂到GameObjects上。</p>
+<h2 id="13-editor-default-resources">1.3、Editor Default Resources</h2>
+<p>编辑器脚本可以通过使用EditorGUIUtility.Load按需加载资源文件。这个函数从Editor Default Resources里面查找资源，并且你需要把改文件夹直接放到Assets目录下。</p>
+<h2 id="14-gizmos">1.4、Gizmos</h2>
+<p>Unity的Gizmos允许我们向场景视图中添加图形来辅助可视化不可见的设计细节。例如，Gizmos.DrawIcon函数放置一个图标到场景视图中，以此来标记一个特殊的对象或位置的标记。我们必须将用到的图标资源放到名为Gizmos的文件夹中，以便能通过DrawIcon函数查找到。</p>
+<h2 id="15-plugins">1.5、Plugins</h2>
+<p>Unity允许将插件添加到项目中来扩展Unity的可用功能。插件通常是用C/C++编写的本地DLL。他们可以访问由Unity提供的第三方代码库，系统调用和其他功能。必须将插件放到名为Plugins的文件夹中，以便Unity检测到他们。与编辑器文件夹一样，这回影响到编译脚本的顺序。</p>
+<h2 id="16-resources">1.6、Resources</h2>
+<p>通常，我们可以在场景中创建资源实例，以便在游戏运行过程中使用他们。但Unity还允许我们根据自身需要通过脚本加载资源。我们只需要将资源放到Resources目录下或者它的子目录下(我们可以创建任意数量的Resources目录，也可以把Resources放到项目的任意地方)，然后通过Resources.Load函数加载这些资源。当然如果Resources文件夹位于Editor的文件夹下面，则里面的资源可以通过编辑器脚本加载，但是在发布时，这些资源会被删除。</p>
+<h2 id="17-standard-assets">1.7、Standard Assets</h2>
+<p>当我们导入标准资源包时，这些资源会被放到一个名叫 Standard Assets的文件夹中。该文件夹除了可以包含资源外，还会影响脚本的编译顺序，具体见后面介绍。</p>
+<h2 id="18-streamingassets">1.8、StreamingAssets</h2>
+<p>大多数游戏资源都会直接打包到产品中，但在某些情况下，我们希望资源能够以原始格式作为单独的文件提供（例如，要在IOS上播放视频，必须访问视频文件系统，而不是把它作为MoiveTexture）。如果将文件放在名为StreamingAssets的目录中，它将原样的复制到目标平台中，然后在特定文件夹中加载他们。<br>
+Unity中的大多数资源在构建的就合并到项目中了。但是，将文件放到目标计算机上的正常文件系统里，就可以通过路径名访问该文件，有时会非常有用。比如在IOS设备上播放电影文件，在播放时，原始电影文件必须在该文件系统中可用才能正常播放。<br>
+在Unity项目中放置在StreamingAssets目录中的任何文件都会原封不动的拷贝到目标计算机的特定目录中。我们可以使用Application.streamingAssetsPath属性获取到文件夹路径。最好使用Application.streamingAssetsPath获取StreamingAssets目录的路径，因为该方法总是指向运行应用程序平台上的正确位置。</p>
+<p>该位置因平台而异，请注意区分大小写：</p>
+<p>在台式机上(Mac OS / Windows)上，可以使用下面代码获取文件的位置：</p>
+<pre><code>path = Application.dataPath + &quot;/StreamingAssets&quot;;
+</code></pre>
+<p>在IOS中，使用：</p>
+<pre><code>path = Application.dataPath + &quot;/Raw&quot;;
+</code></pre>
+<p>在Android中，使用</p>
+<pre><code>path = &quot;jar:file://&quot; + Application.dataPath + &quot;!/assets/&quot;;
+</code></pre>
 ]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+        <content type="html"><![CDATA[<h1 id="一-特殊文件夹">一、特殊文件夹</h1>
+<p>通常我们会为我们创建的文件夹去上任何喜欢的名称，但是有一些文件夹名称会被Unity解释为一个指令，文件夹中的内容会被Unity特殊对待。例如，必须将编辑器脚本放置在名为Editor的文件夹中，这样这些脚本才能正常运行。</p>
+<h2 id="11-assets">1.1、Assets</h2>
+<p>该文件夹是Unity工程使用到的资源的根目录。编辑器中，Project窗口直接一一对应的显示这个目录下的资源。大多数的API函数都是假定一切都是位于Assets文件夹中的，我们不需要明确的提及它。但是某些函数需要将Assets文件夹作为路径名的一部分（例如AssetDatabase中的某些函数）。</p>
+<h2 id="12-editor">1.2、Editor</h2>
+<p>放在该文件夹或其中的子文件中的所有脚本都被视为编辑器脚本，而不是运行时脚本。这些脚本被设计为在开发期间向Unity本身添加功能的脚本，并且不能运行在已经发布的游戏上。可以在项目中使用多个Editor文件夹，但是在一些特殊的文件夹下面会影响他们自身的编译顺序。可以使用Editor脚本中的EditorGUIUtility.Load函数将放在Editor文件夹下面的Resources文件中的资源加载进来，这些资源只能通过编辑器脚本加载，在编译时这些资源会被删除。</p>
+<p>注意：如果脚本放在编辑器文件夹中并且派生自MonoBehaviour组件，Unity不允许把这类脚本挂到GameObjects上。</p>
+<h2 id="13-editor-default-resources">1.3、Editor Default Resources</h2>
+<p>编辑器脚本可以通过使用EditorGUIUtility.Load按需加载资源文件。这个函数从Editor Default Resources里面查找资源，并且你需要把改文件夹直接放到Assets目录下。</p>
+<h2 id="14-gizmos">1.4、Gizmos</h2>
+<p>Unity的Gizmos允许我们向场景视图中添加图形来辅助可视化不可见的设计细节。例如，Gizmos.DrawIcon函数放置一个图标到场景视图中，以此来标记一个特殊的对象或位置的标记。我们必须将用到的图标资源放到名为Gizmos的文件夹中，以便能通过DrawIcon函数查找到。</p>
+<h2 id="15-plugins">1.5、Plugins</h2>
+<p>Unity允许将插件添加到项目中来扩展Unity的可用功能。插件通常是用C/C++编写的本地DLL。他们可以访问由Unity提供的第三方代码库，系统调用和其他功能。必须将插件放到名为Plugins的文件夹中，以便Unity检测到他们。与编辑器文件夹一样，这回影响到编译脚本的顺序。</p>
+<h2 id="16-resources">1.6、Resources</h2>
+<p>通常，我们可以在场景中创建资源实例，以便在游戏运行过程中使用他们。但Unity还允许我们根据自身需要通过脚本加载资源。我们只需要将资源放到Resources目录下或者它的子目录下(我们可以创建任意数量的Resources目录，也可以把Resources放到项目的任意地方)，然后通过Resources.Load函数加载这些资源。当然如果Resources文件夹位于Editor的文件夹下面，则里面的资源可以通过编辑器脚本加载，但是在发布时，这些资源会被删除。</p>
+<h2 id="17-standard-assets">1.7、Standard Assets</h2>
+<p>当我们导入标准资源包时，这些资源会被放到一个名叫 Standard Assets的文件夹中。该文件夹除了可以包含资源外，还会影响脚本的编译顺序，具体见后面介绍。</p>
+<h2 id="18-streamingassets">1.8、StreamingAssets</h2>
+<p>大多数游戏资源都会直接打包到产品中，但在某些情况下，我们希望资源能够以原始格式作为单独的文件提供（例如，要在IOS上播放视频，必须访问视频文件系统，而不是把它作为MoiveTexture）。如果将文件放在名为StreamingAssets的目录中，它将原样的复制到目标平台中，然后在特定文件夹中加载他们。<br>
+Unity中的大多数资源在构建的就合并到项目中了。但是，将文件放到目标计算机上的正常文件系统里，就可以通过路径名访问该文件，有时会非常有用。比如在IOS设备上播放电影文件，在播放时，原始电影文件必须在该文件系统中可用才能正常播放。<br>
+在Unity项目中放置在StreamingAssets目录中的任何文件都会原封不动的拷贝到目标计算机的特定目录中。我们可以使用Application.streamingAssetsPath属性获取到文件夹路径。最好使用Application.streamingAssetsPath获取StreamingAssets目录的路径，因为该方法总是指向运行应用程序平台上的正确位置。</p>
+<p>该位置因平台而异，请注意区分大小写：</p>
+<p>在台式机上(Mac OS / Windows)上，可以使用下面代码获取文件的位置：</p>
+<pre><code>path = Application.dataPath + &quot;/StreamingAssets&quot;;
+</code></pre>
+<p>在IOS中，使用：</p>
+<pre><code>path = Application.dataPath + &quot;/Raw&quot;;
+</code></pre>
+<p>在Android中，使用</p>
+<pre><code>path = &quot;jar:file://&quot; + Application.dataPath + &quot;!/assets/&quot;;
+
+&lt;!-- more --&gt;
+</code></pre>
+<p>在Android上，文件包含在压缩的.jar文件中，这意味着如果不使用Unity的WWW类来检索文件，我们就需要使用额外的软件来查看.jar文件内部。</p>
+<p>注意：位于StreamingAssets目录中的.dll文件不参与编译。</p>
+<p>##1.9、Hidden Assets<br>
+在导入过程中，Unity完全忽略Assets目录中（或其中的子目录）中的以下文件和文件夹：</p>
+<ul>
+<li>隐藏的目录</li>
+<li>以‘.’开头的文件和目录</li>
+<li>以‘~’结尾的文件和目录</li>
+<li>名为cvs的文件和目录</li>
+<li>扩展名为.tmp的文件<br>
+这是用于防止导入操作系统或其他应用程序创建的特殊和临时文件。</li>
+</ul>
+<h1 id="二-脚本编译顺序">二、脚本编译顺序</h1>
+<p>Unity保留了一些项目文件夹名称来标识其内的内容具有一些特殊目的。而其中一些文件夹会影响脚本编译的编译顺序。这些文件夹名称是：</p>
+<ul>
+<li>
+<p>Assets</p>
+</li>
+<li>
+<p>Editor</p>
+</li>
+<li>
+<p>Editor default resources</p>
+</li>
+<li>
+<p>Gizmos</p>
+</li>
+<li>
+<p>Plugins</p>
+</li>
+<li>
+<p>Resources</p>
+</li>
+<li>
+<p>Standard Assets</p>
+</li>
+<li>
+<p>StreamingAssets<br>
+脚本编译有四个不同的阶段。处于哪个阶段编译由其父目录确定。<br>
+在脚本必须引用其他脚本中定义的类容的情况下，编译的顺序就非常重要了。基本规则是，在当前阶段之后编译的任何东西都引用不到，在当前阶段之前或早期的阶段编译的任何内容都可以完全引用。<br>
+编译阶段如下：</p>
+</li>
+<li>
+<p>阶段1：编译Standard Assets、Plugin中的运行时脚本</p>
+</li>
+<li>
+<p>阶段2：编译Standard Assets、Plugin中的Editor脚本</p>
+</li>
+<li>
+<p>阶段3：编译其他不在Editor目录下的脚本</p>
+</li>
+<li>
+<p>阶段4：编译Editor目录下的脚本</p>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[USequencer系列之三]缤纷事件、事件间吸附]]></title>
+        <id>https://www.7fires.cn/post/210/</id>
+        <link href="https://www.7fires.cn/post/210/">
+        </link>
+        <updated>2017-02-16T13:27:41.000Z</updated>
+        <content type="html"><![CDATA[<p>一晃眼，两个月就过去，繁忙的两个月，好在结果是丰满喜悦的，收获也是满满的。<br>
+在上一篇博文中，我们修改源码，让剧情编辑器准确的显示瞬时事件和持续事件，便于用户一眼辨别。在这一篇中我们再接再厉，继续修改事件相关的源码，使之更加友好易用。</p>
+<h1 id="一-五彩缤纷的事件">一、五彩缤纷的事件</h1>
+<p>对于USequencer编辑器，用过的人都知道，在默认的设置下，所有事件都是统一的浅灰色，不论是瞬时事件，还是持续事件，而背景是纯黑色，这样不仅不便于查看，也不容易区分不同的事件，还容易伤眼睛，让人看着沉重和困乏。<br>
+如下所示：<br>
+<img src="https://www.7fires.cn/post-images/1606310919593.png" alt="" loading="lazy"><br>
+而如果剧情已经做到后期，事件数量堆叠起来后，同一个界面里可能充斥着数十种不同事件不同排列组合。事件之间互相交叠，你中有我，我中有你。而到这个时候，如果单通过事件的名字来区分、查找和修改事件就显得有些困难了，同样的持续事件时间长度也难以一眼明了。  面对一堆外形都差不多的事件，挑选出特定事件，这不就是现实版的大家来找茬么~~~<br>
+如果，假设每一类事件都有一个自己的专属颜色，而这个颜色恰巧又可以让用户自己配置，那通过颜色就可以很容易的区分不同事件，查找起来也会非常的方便。并且用户还可以给自己常用的事件配置上自己喜欢的颜色，岂不美哉~~~<br>
+铺垫已够，下面说正事，其实代码就几行而已，如下所示：<br>
+USEventBaseEditor.cs<br>
+<img src="https://www.7fires.cn/post-images/1606310942870.png" alt="" loading="lazy"></p>
+<p>逻辑也很简单：</p>
+<p>1、获取当前事件的名字<br>
+2、在USeqSkin主题配置里查找相应的风格配置<br>
+2.1、如果没找到，就使用默认的风格(用户太懒，不想配置就用默认的吧)<br>
+3、使用该风格绘制事件的背景色<br>
+3.1、连默认的都没有，那还是继续灰色吧(程序猿太懒~)<br>
+下面是USeqSkin的配置方法：<br>
+USeqSkin配置文件路径：<br>
+付费版：<br>
+Assets/WellFired/usequencer/Uncompiled/Editor/Resources/USequencerProSkin.guiskin<br>
+免费版：<br>
+Assets/WellFired/usequencer/Uncompiled/Editor/ResourcesUSequencerFreeSkin.guiskin<br>
+ps:这个GUI主题设置，不仅可以设置每个事件的名字(我们自己扩展的)，也可以配置USequencer的编辑器面板界面，具体的就自己配置着玩吧，这里不细说<br>
+点击后，在Inspector的显示是下面这个样子的：<br>
+<img src="https://www.7fires.cn/post-images/1606310973883.png" alt="" loading="lazy"><br>
+通过修改Size的数据来增删各项主题风格。<br>
+展开每项主题风格标签，其中在Normal标签下的Background就是我们需要修改的背景颜色图片，用自己喜欢的颜色图片替换原来的就搞定了。当然也可以换成自己喜欢的背景图，什么猫呀、狗呀等等都可以，不受限制。<br>
+ps:因为要应对各种不同的事件长度，图片会被任意比例的拉扯，所以还是纯色图片比较好用<br>
+下面是测试用例里定义的几种风格，我们只修改的相应的背景色，其他的选项可以自己研究，会很好的玩的哦~<br>
+<img src="https://www.7fires.cn/post-images/1606310987668.png" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606311005448.png" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606311011455.png" alt="" loading="lazy"></p>
+<p>这是修改后的剧情编辑界面：<br>
+<img src="https://www.7fires.cn/post-images/1606311086241.png" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606311091098.png" alt="" loading="lazy"><br>
+怎么样，是不是比起老的灰色要好看、易看和好看！！！<br>
+记住，如果你的配色不能让用户感到满意的话，可以让美术人员来帮你配色，毕竟这个是可以自定义的，里面的字体颜色也是可以修改的！合理的配色会让人赏心悦目，看起来像艺术品；糟糕的配色会让整个编辑器看起来像一个大染缸。<br>
+快来让你的美术给你的编辑器搭配上好看的颜色吧。<br>
+ps:为大家准备的部分的色块，供大家使用：https://github.com/sevenfires/USequencerStudy.git<br>
+<img src="https://www.7fires.cn/post-images/1606311110027.png" alt="" loading="lazy"></p>
+<h1 id="二-事件吸附功能">二、事件吸附功能</h1>
+<p>在剧情编辑过程中，美术常常需要拖动事件，而有的事件又要求一个接一个的播放，事件首尾相接(特指持续事件)。最初，美术可能会靠界面拖拽来对其事件，但这总难以对准；然后高要求的美术可能会自己拿计算器在那里计算每个事件的起始时间、持续时间、结束时间（带小数点后好几位），然后直接填到事件里（ps:我们的剧情美术早期就是这么干的，那个时候优先实现游戏功能，编辑器的易用改造排在后面；惭愧，感觉有点对不起美术）；当然最后有了事件吸附功能，美术就轻松多了，我也没那么惭愧了，O(∩_∩)O哈哈~<br>
+逻辑也不复杂，如下所示：<br>
+EventEditor.cs<br>
+<img src="https://www.7fires.cn/post-images/1606311127450.png" alt="" loading="lazy"><br>
+详细文本源码如下：</p>
+<pre><code>private float Sorption(USEventBase destEventBase, float newTime)
+{
+    float destFireTime = newTime;
+    USEventBase[] eventBases = destEventBase.Timeline.GetComponentsInChildren&lt;USEventBase&gt;();
+    foreach (var eventBase in eventBases)
+    {
+        if (eventBase == destEventBase) continue;
+        if (eventBase.Duration &lt;= 0) continue;
+ 
+        float interval = Mathf.Abs(eventBase.FireTime + eventBase.Duration - newTime);
+        if (interval &lt; 0.3f)
+        {
+            destFireTime = eventBase.FireTime + eventBase.Duration;
+            continue;
+        }
+        interval = Mathf.Abs(newTime + destEventBase.Duration - eventBase.FireTime);
+        if (interval &lt; 0.3f)
+        {
+            destFireTime = eventBase.FireTime - destEventBase.Duration;
+            continue;
+        }
+    }
+    return destFireTime;
+}
+</code></pre>
+<p>效果图：<br>
+<img src="https://www.7fires.cn/post-images/1606311157829.gif" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606311162804.gif" alt="" loading="lazy"></p>
+<p>ps：便于测试，拖拽时间隔低于0.3S就会自动吸附，实际中给0.1S左右就够用了；还有如果需要间隔的间隔小于吸附值，可以手动修改事件在Inspector中的Fire值达到想要的数值。<br>
+这期就先这么多，不好意思，废话有点多，还请见谅……</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[【合并Shader】合并渲染状态]]></title>
+        <id>https://www.7fires.cn/post/203/</id>
+        <link href="https://www.7fires.cn/post/203/">
+        </link>
+        <updated>2017-01-20T13:18:18.000Z</updated>
+        <content type="html"><![CDATA[<p>年关将至，整理今年的大小事务，看看哪些是可以拖到年后的。整理发现今年一直想写，却迟迟未动手写的《合并Shader》还没有开工。是的，如你所见这是在开一个新坑，不多挖点坑，将来怎么会有意愿去填坑呢！！！当然更早的《USequencer系列》也会一直更新，毕竟USequencer最大的问题还没有解决，对于这个又爱又恨的插件，我会一直跟到底。<br>
+还是先说说这个新坑吧，《合并Shader》系列旨在介绍一些技能和方法，用来把数量繁多的Shader进行减量，在保证功能不打折的情况下，精简Shader数量，原理就是把相似功能的Shader文件合并在一个文件里。当然学过这些技能后，极致情况下可以做到把所有的Shader文件合并成一个，如Unity 5.x的Standard着色器，但我不会建议你这样做，原因嘛，你尝试过后就会知道，我就不多说，因为我没有尝试过，嘿嘿！本系列对一些常用的，不常用的，正派的，歪门邪道的技能和方法都会有所涉猎。林林总总的技能和方法中，我们尽量遵从从简到繁的方式来依次遍历。<br>
+在数学中，我们学习过：把多项式中的同类项合并成一项叫做同类项的合并，也叫合并同类项。同理，提取Shader的相似部分，把多个Shader合并成一个就叫做Shader的合并，也叫合并Shader，偶尔也会引用数学的名词来称呼他为Shader的合并同类项。<br>
+Shader的合并方式方法有很多，根据不同的合并技能和方法，可以画分为不同的派系。今天优先介绍一种不太常见，但又很实用的派系，往下看。<br>
+王婆卖瓜，自卖自夸， 让我再多说几句废话。对于Shader的合并，首先让人想到的应该是宏定义，相信宏定义也是大家应用最广，最先接触到的，使用自然也不再话下，毕竟由于GPU的特殊性，Shader里常常通篇都充满了各种宏定义。当然，该系列会对宏定义有所介绍，他可是Shader合并里功高盖世的重要角色，很多地方都会有他的身影。但对他的介绍不在这一篇，也许会是下一篇，因为他还不是我认为的最简单的合并Shader方式。至于最简单的合并Shader的方式，应该是使用Unity已经预先定制好的几种MaterialPropertyDrawer来合并Shader的方式。只用修改2行代码，就可以搞定一类Shader的合并，该方法主要用来合并那些只是渲染状态不一样的Shader。</p>
+<h1 id="一-初次简单使用">一、初次简单使用</h1>
+<p>一个完整的Shader，他的渲染状态变量有很多种，由于不是每一种状态的改变都能很明显的看到结果，而作为初次使用，优先选择一种最明显的、最容易懂的状态作为我们的测试用例，他就是ZTest，深度比较。对ZTest不太了解的朋友，可以看看官方的学习文档或者查看一下相关技术书籍，我就不在这里具体介绍这个状态了。<br>
+1.1 首先我们选用的是Unity官方提供的一个最常用Shader：Normal-Diffuse.shader(Legacy Shaders/Diffuse)</p>
+<p>1.2 在属性列表(Properties)中添加一行</p>
+<pre><code>[Enum(UnityEngine.Rendering.CompareFunction)] _ZTest (&quot;ZTest&quot;, Float) = 2
+</code></pre>
+<p>1.3 在SubShader中添加一行</p>
+<pre><code>ZTest [_ZTest]
+</code></pre>
+<p>1.4 完整的Shader</p>
+<pre><code>Shader &quot;ShaderCombine/01.ShaderCombineSimpleZTest&quot;
+{
+    Properties {
+        _Color (&quot;Main Color&quot;, Color) = (1,1,1,1)
+        _MainTex (&quot;Base (RGB)&quot;, 2D) = &quot;white&quot; {}
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest (&quot;ZTest&quot;, Float) = 2
+    }
+    SubShader {
+        Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+        LOD 200
+        ZTest [_ZTest]
+        CGPROGRAM
+        #pragma surface surf Lambert
+        sampler2D _MainTex;
+        fixed4 _Color;
+        struct Input {
+            float2 uv_MainTex;
+        };
+        void surf (Input IN, inout SurfaceOutput o) {
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+            o.Albedo = c.rgb;
+            o.Alpha = c.a;
+        }
+        ENDCG
+    }
+    Fallback &quot;Legacy Shaders/VertexLit&quot;
+}
+</code></pre>
+<p>只用添加这两行代码，我们就可以再Inspector面板中控制使用该Shader物体的深度测试方法。</p>
+<p>1.5 直观展示<br>
+在Unity中的测试示例是这样的：<br>
+<img src="https://www.7fires.cn/post-images/1606310513788.gif" alt="" loading="lazy"><br>
+当然大家也可以通过这个示例测试一下每一种深度测试的方法是否与你心中所想或之前所学的是否冲突。</p>
+<h1 id="二-再次深入使用">二、再次深入使用</h1>
+<p>在上面的例子中，我们只使用了深度测试。但对于我们来说，单单一个深度测试肯定满足不了我的，我们还需要更多、更多的状态，比如背面剔除、混合模式等等。<br>
+在这一节中，我列举出了一些常用的状态控制量，对于一些不常用的模板什么的，就不在这里列举。当然对于没有列举的，可以依葫芦画瓢，大部分基本都是可行的。</p>
+<h2 id="21-一个大而全的简单示例shader如下">2.1 一个大而全的简单示例Shader如下：</h2>
+<pre><code>Shader &quot;ShaderCombine/02.ShaderCombineCommonState&quot;
+{
+    Properties {
+        _Color (&quot;Main Color&quot;, Color) = (1,1,1,1)
+        _MainTex (&quot;Base (RGB)&quot;, 2D) = &quot;white&quot; {}
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull (&quot;Cull Mode&quot;, Float) = 1
+        [Enum(Off,0,On,1)] _ZWrite (&quot;ZWrite&quot;, Float) = 1
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest (&quot;ZTest&quot;, Float) = 1
+        [Enum(UnityEngine.Rendering.BlendMode)] _SourceBlend (&quot;Source Blend Mode&quot;, Float) = 2        
+        [Enum(UnityEngine.Rendering.BlendMode)] _DestBlend (&quot;Dest Blend Mode&quot;, Float) = 2
+    }
+    SubShader {
+        Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+        LOD 200
+        ZTest [_ZTest]
+        Cull [_Cull]
+        ZWrite [_ZWrite]
+        ZTest [_ZTest]
+        Blend [_SourceBlend] [_DestBlend]
+        CGPROGRAM
+        #pragma surface surf Lambert
+        sampler2D _MainTex;
+        fixed4 _Color;
+        struct Input {
+            float2 uv_MainTex;
+        };
+        void surf (Input IN, inout SurfaceOutput o) {
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+            o.Albedo = c.rgb;
+            o.Alpha = c.a;
+        }
+        ENDCG
+    }
+    Fallback &quot;Legacy Shaders/VertexLit&quot;
+}
+</code></pre>
+<h2 id="22-直观展示">2.2 直观展示</h2>
+<p>应用效果：<br>
+<img src="https://www.7fires.cn/post-images/1606310833467.gif" alt="" loading="lazy"></p>
+<h1 id="三-有限自定义">三、有限自定义</h1>
+<p>在上面的示例中，我们都是使用Unity预先定义好的一些枚举类型，比如UnityEngine.Rendering.CompareFunction，UnityEngine.Rendering.BlendMode等。这些定义好的类型把每个状态可能的选项都一一列举了，但有时候我们并不需要这么多选项，或者说我们并不希望给美术列举出所有的可选项，毕竟很多的选项我们可能做完整个项目或者几个项目都不会使用到，而过多的选项也会带来很多的麻烦。或者换一个说法，我希望我们的功能使用起来简单易懂，不易出错并且可控，那就需要我们开发做更多的工作，去掉那些”无用”的选项。其实说这么废话，无非就是我们能不能自己定义每个状态的选项呢？答案当然是可以的。</p>
+<p>在给出自定义方式前，我们先来熟悉一下Unity给我们提供的这几个枚举类型。</p>
+<h2 id="31-剔除模式">3.1 剔除模式</h2>
+<pre><code>UnityEngine.Rendering.CullMode：
+public enum CullMode
+{       
+    Off   = 0,    //Disable culling.       
+    Front = 1,    //Cull front-facing geometry.       
+    Back  = 2     //Cull back-facing geometry.
+}
+</code></pre>
+<h2 id="32-比较方式">3.2 比较方式</h2>
+<p>该比较方式通用与深度比较和模板比较</p>
+<pre><code>UnityEngine.Rendering.CompareFunction
+//Depth or stencil comparison function.
+public enum CompareFunction
+{
+    Disabled     = 0,   //Depth or stencil test is disabled.
+    Never        = 1,   //Never pass depth or stencil test.
+    Less         = 2,   //Pass depth or stencil test when new value is less than old one.
+    Equal        = 3,   //Pass depth or stencil test when values are equal.
+    LessEqual    = 4,   //Pass depth or stencil test when new value is less or equal than old one.
+    Greater      = 5,   //Pass depth or stencil test when new value is greater than old one.
+    NotEqual     = 6,   //Pass depth or stencil test when values are different.
+    GreaterEqual = 7,   //Pass depth or stencil test when new value is greater or equal than old one.
+    Always       = 8    //Always pass depth or stencil test.
+}
+</code></pre>
+<p>3.3 混合模式</p>
+<pre><code>UnityEngine.Rendering.BlendMode
+//Blend mode for controlling the blending.
+public enum BlendMode
+{
+    Zero             = 0,   //Blend factor is (0, 0, 0, 0).
+    One              = 1,   //Blend factor is (1, 1, 1, 1).
+    DstColor         = 2,   //Blend factor is (Rd, Gd, Bd, Ad).
+    SrcColor         = 3,   //Blend factor is (Rs, Gs, Bs, As).
+    OneMinusDstColor = 4,   //Blend factor is (1 - Rd, 1 - Gd, 1 - Bd, 1 - Ad).
+    SrcAlpha         = 5,   //Blend factor is (As, As, As, As).
+    OneMinusSrcColor = 6,   //Blend factor is (1 - Rs, 1 - Gs, 1 - Bs, 1 - As).
+    DstAlpha         = 7,   //Blend factor is (Ad, Ad, Ad, Ad).
+    OneMinusDstAlpha = 8,   //Blend factor is (1 - Ad, 1 - Ad, 1 - Ad, 1 - Ad).
+    SrcAlphaSaturate = 9,   //Blend factor is (f, f, f, 1); where f = min(As, 1 - Ad).
+    OneMinusSrcAlpha = 10   //Blend factor is (1 - As, 1 - As, 1 - As, 1 - As).
+}
+</code></pre>
+<h2 id="34-有限的自定义">3.4 有限的自定义</h2>
+<p>在上面3个小小节中，我们了解了Unity自身提供的状态选项，而且每一个状态选项后都强制赋上了相应的数值，这是有原因的。因为我们写好的Shader不管怎样都要首先经过Unity的编译等处理转换为目标平台的着色器语言。而Unity自己的Shader编译器我们是没法修改(没有源码的情况)，也就是说我们不能随意更改这些状态的数值。其实我们修改的这些状态值都是给Unity的Shader编译器看的，而编译器对状态的数值是理解是固化好的。SO，虽然我们可以自定义这些状态选项，但也不会任由我们随意定义，这就好比戴着镣铐跳舞，虽然有限制，但我们依然可以跳出优美的舞蹈。<br>
+自定义非常的简单，我们可以减少选项的数量，但是不能改变每一项的值，这就要求我们强行给每一个值赋上对应的值，依然还是用深度测试实验，如下所示：<br>
+这是之前的：</p>
+<pre><code>[Enum(UnityEngine.Rendering.CompareFunction)] _ZTest (&quot;ZTest&quot;, Float) = 2
+</code></pre>
+<p>这是自定后的：</p>
+<pre><code>[Enum(Less,2,Greater,5)] _ZTest (&quot;ZTest&quot;, Float) = 2
+</code></pre>
+<p>选项与数值全部使用逗号分隔，该示例中我只给出了两个选项，小于和大于，便于直观查看。<br>
+完整Shader如下：</p>
+<pre><code>Shader &quot;ShaderCombine/03.ShaderCombineCustomState&quot;
+{
+    Properties {
+        _Color (&quot;Main Color&quot;, Color) = (1,1,1,1)
+        _MainTex (&quot;Base (RGB)&quot;, 2D) = &quot;white&quot; {}
+        [Enum(Less,2,Greater,5)] _ZTest (&quot;ZTest&quot;, Float) = 2
+    }
+    SubShader {
+        Tags { &quot;RenderType&quot;=&quot;Opaque&quot;}
+        LOD 200
+        ZTest [_ZTest]
+        CGPROGRAM
+        #pragma surface surf Lambert
+        sampler2D _MainTex;
+        fixed4 _Color;
+        struct Input {
+            float2 uv_MainTex;
+        };
+        void surf (Input IN, inout SurfaceOutput o) {
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+            o.Albedo = c.rgb;
+            o.Alpha = c.a;
+        }
+        ENDCG
+    }
+    Fallback &quot;Legacy Shaders/VertexLit&quot;
+}
+</code></pre>
+<h2 id="35-直观展示">3.5 直观展示</h2>
+<p>在Unity中的样子是这样的：<br>
+<img src="https://www.7fires.cn/post-images/1606310813022.gif" alt="" loading="lazy"></p>
+<p>细心的读者可能已经发现我们在第二章节中的完整示例中就有使用自定义，就是里面的那个写深度_ZWrite选项，因为没有在Unity里面找到相应的枚举值，就直接使用了自定义，反正只要保证数值是正确的就可以任意发挥使用。更多的使用和应用场景就等你们去发现了，我这只是抛砖引玉。</p>
+<p>以上便是MaterialPropertyDrawer的应用场景之一，对于MaterialPropertyDrawer的应用，在后续的篇章中也还会陆续出现。我计划把MaterialPropertyDrawer应用当成《合并Shader》系列中的一个分支，当然《合并Shader》系列不会仅且只有这一个分支的，O(∩_∩)O哈哈~</p>
+<p>其实最初是想花一整章篇幅来讲解MaterialPropertyDrawer的各种使用，但其内部的扩展空间还比较广泛。写下来篇幅太长，而太长的篇幅，阅读起来也比较麻烦，所以还是拆成几章篇幅来慢慢絮叨吧，同时也遵从一次只讲一个问题。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[【USequencer系列之二】准确显示瞬时事件和持续事件]]></title>
+        <id>https://www.7fires.cn/post/199/</id>
+        <link href="https://www.7fires.cn/post/199/">
+        </link>
+        <updated>2016-09-30T13:03:19.000Z</updated>
+        <content type="html"><![CDATA[<p>这是USequencer系列的第二篇，距离上一篇已经一个月了。在上一篇博文中，我们简单介绍了USequencer的一些基本功能和特性，同时也说到了USequencer的很多不足之处：一些边角的东西做得不是特别好。不过好在修改这些小功能都是很简单很方便的，毕竟有USequencer强大的结构支撑着，任何的小修改和优化都是那样的简单和实用。<br>
+在上一篇中有提到过USequencer的事件几乎是一个万能的东西，只要你需要，没有用他完成不了的。这篇先不介绍那些用他完成不可思议的东西，先解决一下瞬时和持续事件的显示方式，让他准确的传达出每个事件的真实意图。</p>
+<h1 id="准确显示瞬时和持续事件">准确显示瞬时和持续事件</h1>
+<p>为了方便我们测试，我创建了两个事件，分别是一个瞬时事件和一个持续事件，里面不包含任何的逻辑，只是用他来测试默认情况的下的事件显示问题(具体的创建可以参考官方文档)。<br>
+代码如下：</p>
+<pre><code>[USequencerFriendlyName(&quot;瞬时事件&quot;)]
+[USequencerEvent(&quot;Custom/Instant Event 瞬时事件&quot;)]
+[USequencerEventHideDuration()]
+public class SFInstantEvent : USEventBase {
+    public override void FireEvent() {
+ 
+    }
+ 
+    public override void ProcessEvent(float runningTime) {
+ 
+    }
+}
+</code></pre>
+<pre><code>[USequencerFriendlyName(&quot;持续事件&quot;)]
+[USequencerEvent(&quot;Custom/Continue Event 持续事件&quot;)]
+public class SFContinueEvent : USEventBase {
+    public override void FireEvent() {
+ 
+    }
+ 
+    public override void ProcessEvent(float runningTime) {
+ 
+    }
+}
+</code></pre>
+<p>这两个事件在编辑面板下的显示如下：<br>
+<img src="https://www.7fires.cn/post-images/1606309610092.png" alt="" loading="lazy"></p>
+<p>在事件展开模式下，这个两个事件的显示长度一样，如果不是上面的文字，根本区分不出这两个事件哪个是瞬时事件，哪个是持续事件。<br>
+<img src="https://www.7fires.cn/post-images/1606310156953.png" alt="" loading="lazy"></p>
+<p>在事件折叠模式下，这两个事件又都统一的显示为一个小竖条，真的是傻傻分不清楚。<br>
+这样的一种显示模式，通常会误导美术，难以区分瞬时和持续事件，编辑时多多少少会受影响。下面我们就来看看怎么修正这个问题，让USequencer准确显示瞬时事件和持续事件。</p>
+<h1 id="一-展开模式expand">一、展开模式Expand</h1>
+<h2 id="11-修改所有事件的默认长度">1.1、修改所有事件的默认长度</h2>
+<p>通过分析USequencer的源码，发现每个事件的默认显示模式都由USEventBaseEditor.cs这个脚本来控制，通过修改里面的方法DrawEventInTimeline可以修改每个事件的默认长度，修改代码如下：<br>
+USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309665859.png" alt="" loading="lazy"></p>
+<p>修改后的显示结果<br>
+<img src="https://www.7fires.cn/post-images/1606309679137.png" alt="" loading="lazy"></p>
+<p>事件已经如我们的预期的方式显示了：瞬时事件为一个竖条，持续事件为一个矩形区域。同时也发现瞬时事件的标签没有显示出来，我们继续探索研究。</p>
+<h2 id="12-修改该模式下的默认标签长度">1.2、修改该模式下的默认标签长度</h2>
+<p>在上一个方法的结束位置，调用了RenderEvent来具体的绘制每个事件，在RenderEvent这个方法里负责具体绘制事件的背景区块和相应的标签。在默认情况下标签的显示区域就是上面给的renderingArea，瞬时事件瞬间就尴尬了。<br>
+没事我们来修改相应的代码，把背景区块的Area与标签的Area区分开，标签的区域允许超过背景块的区域，不然持续时间很短的持续时间的标签也会显示不完整(提示只能看到一半，很让人抓狂，不做吊胃口的事)。具体的修改如下所示：<br>
+USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309707438.png" alt="" loading="lazy"><br>
+修改后的显示结果：<br>
+<img src="https://www.7fires.cn/post-images/1606309747469.png" alt="" loading="lazy"></p>
+<p>原先的持续事件标签超过背景区域：<br>
+<img src="https://www.7fires.cn/post-images/1606310206349.png" alt="" loading="lazy"></p>
+<p>修改后的显示：<br>
+<img src="https://www.7fires.cn/post-images/1606309768854.png" alt="" loading="lazy"></p>
+<p>通过以上修改，其实也就7行代码，就可以让瞬时事件和持续事件在Expand模式下一眼区分开，何乐而不为呢！</p>
+<h1 id="二-折叠模式hide">二、折叠模式Hide</h1>
+<p>修改完展开模式下的显示，是不是折叠模式下也能正常显示了呢？现实有点残酷，然而并不如我们想的那样：瞬时和持续事件还是只是一个小竖条，如下所示：<br>
+<img src="https://www.7fires.cn/post-images/1606310233736.png" alt="" loading="lazy"></p>
+<h2 id="21-修改默认的宽度和计算持续事件的宽度">2.1、修改默认的宽度和计算持续事件的宽度</h2>
+<p>依然还是在 USEventBaseEditor.cs这个脚本里面，通过分析和测试，折叠模式下的显示走的是另外一个方法DrawCollapsedEventInTimeline来绘制折叠模式下的事件，通过对比展开模式(DrawEventInTimeline)的相关逻辑，做出了如下的修改：<br>
+USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309822819.png" alt="" loading="lazy"></p>
+<p>默认宽度还是4，如果是持续事件的话，重新计算宽度。修改后的显示结果如下：<br>
+<img src="https://www.7fires.cn/post-images/1606309837207.png" alt="" loading="lazy"></p>
+<p>已经能准确的显示瞬时事件和持续事件，但是你以为这样就结束了吗？然而并没有，你会发现这样的修改后，鼠标在点选持续事件的时候，很难点中，只有点击持续事件开始的那小块区域才能选中事件，这不是坑爹么？使用起来多么不方便，我们继续修改。请继续往下看~~~</p>
+<h2 id="22-修改折叠模式下的点选准确性">2.2、修改折叠模式下的点选准确性</h2>
+<p>在上面的问题中其实就已经暗含了造成持续事件点选不中的根本原因是事件命中区域与显示区域的不一样造成的。而在展开模式下完全没有这个问题，通过对比USEventBaseEditor.cs下的DrawEventInTimeline与DrawCollapsedEventInTimeline方法可以发现一些奇妙和不一样的地方。当然还有同一个脚本里的RenderEvent与RenderCollapsedEvent，以及EventEditor.cs下的OnGUI和OnCollapsedGUI。<br>
+对，折叠模式下的这两个方法没有返回值，而这个返回值确实决定了每个事件的点选区域。我对他的修改的内容如下：<br>
+USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309873303.png" alt="" loading="lazy"></p>
+<p>USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309887681.png" alt="" loading="lazy"></p>
+<p>EventEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309899299.png" alt="" loading="lazy"></p>
+<p>修改后的显示和点选结果，以及能够正常点选了：<br>
+<img src="https://www.7fires.cn/post-images/1606309913205.png" alt="" loading="lazy"></p>
+<h1 id="三-持续事件的默认时间">三、持续事件的默认时间</h1>
+<p>上面的方法已经解决了瞬时和持续事件的准确显示问题，但当我们新建持续事件时，默认持续时间竟然是-1s。<br>
+<img src="https://www.7fires.cn/post-images/1606309932343.png" alt="" loading="lazy"></p>
+<p>这~~~这不科学，虽然瞬时事件其实就是一个持续时间为-1s的事件，但是你也不能把持续事件的默认时间也设置为-1s呀，不然我们上面的修改会把这个持续事件默认显示为一个一个小竖条的瞬时事件，这岂不是又在误导美术么，没办法就继续修改吧，谁叫咋有源码。<br>
+跟踪和分析了下源码，定位在创建事件的时候，我们只要在创建的时候区分开瞬时事件和持续事件，把持续事件的持续时间设置为一个默认的持续时间(不要小于0就可以了)，我们的修改如下所示：<br>
+EventEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309950590.png" alt="" loading="lazy"></p>
+<p>代码：</p>
+<pre><code>var customAttributes = type.GetCustomAttributes(true).Where(attr =&gt; attr is USequencerEventHideDurationAttribute).Cast&lt;USequencerEventHideDurationAttribute&gt;().ToArray();
+if (customAttributes.Length == 0)
+    eventComponent.Duration = 1;
+</code></pre>
+<p>界面显示如下：<br>
+<img src="https://www.7fires.cn/post-images/1606309975652.png" alt="" loading="lazy"></p>
+<p>以上就可以让USequencer准确的创建和显示我们的瞬时和持续事件。细心的朋友是否已经发现，通过我们的修改USEventBaseEditor.cs下的DrawEventInTimeline与DrawCollapsedEventInTimeline和RenderEvent与RenderCollapsedEvent，以及EventEditor.cs下的OnGUI和OnCollapsedGUI他们之间已经没有太多差距，可以对他们进行合并，简化逻辑，这里就不详细介绍了。<br>
+还有时间，塞几个小修改，废话不多说，都在代码里：</p>
+<h2 id="1-折叠模式下的高度">1、折叠模式下的高度</h2>
+<figure data-type="image" tabindex="1"><img src="https://www.7fires.cn/post-images/1606310015950.png" alt="" loading="lazy"></figure>
+<p>EventEditor<br>
+<img src="https://www.7fires.cn/post-images/1606310025777.png" alt="" loading="lazy"></p>
+<p>USEventTimelineHierarchyItem<br>
+<img src="https://www.7fires.cn/post-images/1606310036662.png" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606310045950.png" alt="" loading="lazy"></p>
+<h2 id="2-修改字体大小">2、修改字体大小</h2>
+<figure data-type="image" tabindex="2"><img src="https://www.7fires.cn/post-images/1606310058494.png" alt="" loading="lazy"></figure>
+<p>路径：Assets/WellFired/usequencer/Uncompiled/Editor/Resources/USequencerProSkin.guiskin<br>
+<img src="https://www.7fires.cn/post-images/1606310066487.png" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="3"><img src="https://www.7fires.cn/post-images/1606310076260.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://www.7fires.cn/post-images/1606310082992.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[[USequencer系列之一]初识USequencer]]></title>
+        <id>https://www.7fires.cn/post/186/</id>
+        <link href="https://www.7fires.cn/post/186/">
+        </link>
+        <updated>2016-08-14T12:54:23.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="一-引言">一、引言</h1>
+<p>现在几乎所有游戏开场过程中，通常都会有一段唯美的CG动画作为游戏的背景故事介绍。而如果能在游戏过程中也能使用CG动画做过场动画、游戏交通、衔接情节等，那就再好不过了。但现实往往是残酷的，纵观整个游戏圈，敢这么干的游戏公司屈指可数，CG高昂的制作费用不是每一个公司都能够承受的，当然过多的CG资源也会相应的增加包容量，这对移动游戏的包容量也是一个大大的挑战。<br>
+虽然在游戏过程中没法用CG做剧情动画，但如果能用现有游戏资源实时播放一段剧情，必要时还可以让玩家的角色参与其中也是一种很不错的选择。<br>
+对于一段完整的剧情动画通常需要包括：镜头切换、各种动画、炫丽特效、悦耳的声音、旁白字幕、交互UI等等。如果一段剧情只是简单的几个动作和特效，程序进行硬编码，也是很容易的实现的，比如BOSS死亡动画等。但如果需要控制大量角色的不同动作、特效、音效等同时播放，靠程序的硬编码就显得不那么实际了。复杂的剧情动画，自然需要高大上的工具来制作，人员当然要非专业的视频美术不可。</p>
+<h1 id="二-usequencer介绍">二、USequencer介绍</h1>
+<p>巧妇难为无米之炊，专业的视频美术如果没有专业的剧情编辑插件，面对Unity也是束手无策，无可奈何的(总不能还用Adobe After Effects，Unity对他可还不支持哦~)。正所谓好马配好鞍，专业的视频美术，当然也要使用专业视频插件，是不？今天我们就来介绍一款强大且专业的剧情编辑插件——USequencer，免去你从头设计、开发和修改无止境BUG的烦恼。如果你已经自己开发一个剧情插件！没关系，看看这款剧情插件是怎么实现的，取长补短，让你的工具/插件更上几个档次。</p>
+<p>至于为什么选择USequencer，这还得从他的特性上来说：</p>
+<ol>
+<li>事件、属性和相机控制都是基于时间轴设计的</li>
+<li>兼容所有的平台和Unity版本</li>
+<li>简单、直观和易用的用户交互界面</li>
+<li>各种可以直接使用的游戏事件</li>
+<li>直接兼容Playmaker和UScript</li>
+<li>支持Prefab保存</li>
+<li>非常简单、方便的添加自定义事件</li>
+<li>支持自定义事件显示界面</li>
+<li>不会给你的GameObject添加任何额外脚本</li>
+<li>支持Undo/Redo</li>
+<li>……</li>
+</ol>
+<p>USequencer在商店中有两个版本：无源码版$45(uSequencer Cutscene and Cinematic creator)和有源码版$90(Source uSequencer Cutscene and Cinematic creator)。推荐大家购买有源码版的，这样可以任意的定制化开发这款工具了，后续我也会发一篇博文来简单讲讲对这个工具的二次开发，让他变得更好用。</p>
+<p>另外还有官方体验版，地址在这：https://www.wellfired.com/usequencerdownload.html，一些官方示例：https://www.wellfired.com/usequencer.html#samples_tab。</p>
+<h1 id="三-usequencer主界面">三、USequencer主界面</h1>
+<p>购买、下载和安装的事情就自己去搞定了。</p>
+<p>对于USequence的基本使用和界面功能，可以在USequencer官方网站获得更多更详细的介绍，地址如下:https://www.wellfired.com/usequencer.html，在本文的最后，我会把USequencer的老版本入门教程pdf放到了Github上https://github.com/sevenfires/USequencerStudy.git，大家也可以自行下载下来学习研究，新版安装包里已经不包含教程了。</p>
+<h2 id="31主界面概览">3.1主界面概览</h2>
+<p>更详细的USequencer的入门介绍和教程请到官方网站查看，这里只对该插件进行简单介绍，抛砖引玉。<br>
+首先我们看下这款插件的主要工作面板，如下图所示，我已经在工作面板中添加了一些最基本的剧情要素。<br>
+ps:这是一个用原版Sequencer工具制作的一段剧情(不是一段真实的剧情，我只是用这个尽可能多的展示功能而已)。<br>
+<img src="https://www.7fires.cn/post-images/1606309029570.png" alt="" loading="lazy"><br>
+这是这个剧情插件的最基本操作界面,看到这个界面是不是很熟悉，是不是跟美术使用的Adobe After Effects的视频特效的时间轴看起来非常的相似。这是为了减少不同软件间的差异化，遵循美术的操作习惯、减少学习成本、方便剧情美术的使用而刻意设计的。当然市面上的几乎所有的剧情(视频)编辑的界面也都是这个样子，也没太多需要额外设计的。</p>
+<h1 id="32功能构成拆解">3.2功能构成拆解</h1>
+<p>接下来我们来简单介绍下这个界面里面的基本构成吧：<br>
+<img src="https://www.7fires.cn/post-images/1606309059439.png" alt="" loading="lazy"><br>
+在上面的图中，已经标识了每个区域的基本功能和名称。</p>
+<ul>
+<li>Observer：观察者，我称之为导播。他是每段剧情中默认自带的一个角色，不能删除，他的职责是控制当前屏幕上该显示几号相机的画面，没了他，也就没了画面，现在直播就没得看了(当然在我们项目的实际使用过程中，他是没有任何用的，因为只使用了一个相机，没得切，从头到尾就一个，然后这并不是我想要的，历史原因就不提了)。</li>
+<li>CameraMan：摄影师，负责抗着相机到处跑的拍摄画面等。</li>
+<li>LightingArtist：灯光师，负责给游戏的场景打光，烘托气氛，调整光效等。</li>
+<li>Hellephant：具体的一个演员，负责表演，摆POSS，跳舞，对话等。</li>
+<li>PropMaster：道具师，负责给场景摆道具，开门等等。</li>
+<li>EffectArtist：特效师，负责播放特效，放烟雾、打火花等等特效相关的。</li>
+<li>Locomotion：另一个演员</li>
+<li>……</li>
+</ul>
+<p>除了以上这些角色，你也可以为你的剧情新增其他角色来丰富你的剧情，再说这些角色都是我自己YY出来的，不是没一段剧情都需要这么干，而在我们的游戏中也不需要这样的分工明确，同样也可以一个角色干完所有人的活，只要你忙得过来。并且上面的这些角色对Unity来说只是不同的GameObject而已，选择分开还是合并全看你个人高兴了。<br>
+对于上面每一个角色的不同时间线上的待做事项，除了默认的切镜功能只有Observer能使用外，其他都是可以混合或单独使用的。具体有哪些呢？</p>
+<h3 id="321-属性时间线">3.2.1、属性时间线：</h3>
+<p>属性时间线是用来直接控制游戏物体的所有属性，可以使用动画曲线来控制所有东西。这点跟Animation动画一样，也是使用曲线和关键帧的方式控制每个角色(GameObject)的最基本属性：Transform、Material、Camera、Renderer等等；<br>
+<img src="https://www.7fires.cn/post-images/1606309138108.png" alt="" loading="lazy"></p>
+<h3 id="322-事件时间线">3.2.2、事件时间线：</h3>
+<p>用来添加和执行各种事件，是我们使用最多的时间线。在USequencer中已经提供了100多个不同种类的事件，我们可以直接使用这些事件完成很多的逻辑控制。事件时间线是一个万能的时间线，可以控制任何东西，但需要你自己花时间去开发他的无限可能；<br>
+<img src="https://www.7fires.cn/post-images/1606309155862.png" alt="" loading="lazy"></p>
+<h3 id="323-动画时间线">3.2.3、动画时间线：</h3>
+<p>是作者开发用来支持编辑、预览和播放Mecanim动画的时间线，只能用来控制Mecanim动画。目前这个还是Beta版，功能不是很稳定，所以通常会使用时间时间线的一些功能来替代他；<br>
+<img src="https://www.7fires.cn/post-images/1606309171312.png" alt="" loading="lazy"></p>
+<h3 id="324-路径时间线">3.2.4、路径时间线：</h3>
+<p>路径时间线允许你把一个物体沿着一个路径运动，通常用于相机的轨迹运动。</p>
+<h2 id="33剧情编辑运行预览">3.3剧情编辑运行预览</h2>
+<p>USequencer一个最强大的特点就是可以一边编辑剧情，一边预览剧情。只需拖动工作面板上时间轴上的小滑块就可以预览剧情的效果而又不用Play游戏，可以做到对动画、特效和事件逐帧预览，来回反复预览等等，功能很强大。这对提升美术的工作效率有非常大的帮助。我们后续还会讲到。<br>
+<img src="https://www.7fires.cn/post-images/1606309196021.gif" alt="" loading="lazy"></p>
+<h1 id="四-事件扩展">四、事件扩展</h1>
+<p>USequencer最强大的地方就是这个事件的扩展，通过这个扩展，我们几乎可以用事件来完成所有的事情，不论是播放Animation动画，还是Mecanim动画等通通都不在话下，也可以用来进行游戏逻辑的推进等，都非常的简便。下面具体来看看怎么扩展一个事件，本次使用的是一个控制时间缩放的事件，如下所示：</p>
+<pre><code>[USequencerFriendlyName(&quot;Time Scale&quot;)]//用来做事件的GameObject名称和剧情面板中的名字
+[USequencerEvent(&quot;Time/Time Scale&quot;)]//该事件的菜单Item
+[USequencerEventHideDuration()]//表示该事件是否为瞬时事件(有这个命令会被标识为瞬时事件，没有则为持续事件)
+public class USTimeScaleEvent : USEventBase
+{
+    public AnimationCurve scaleCurve = new AnimationCurve(new Keyframe(0.0f, 1.0f), new Keyframe(0.1f, 0.2f), new Keyframe(2.0f, 1.0f));
+    private float currentCurveSampleTime = 0.0f;
+    private float prevTimeScale = 1.0f;
+ 
+    //事件开始时执行，类似Enable，只执行一次
+    public override void FireEvent()
+    {
+        prevTimeScale = Time.timeScale;
+    }
+ 
+    //事件持续执行时调用，类似Update，多次执行
+    public override void ProcessEvent(float deltaTime)
+    {
+        currentCurveSampleTime = deltaTime;
+        Time.timeScale = Mathf.Max(0f, scaleCurve.Evaluate(currentCurveSampleTime));
+    }
+ 
+    //事件结束时执行，类似Disable，只执行一次
+    public override void EndEvent()
+    {
+        float sampleTime = scaleCurve.keys[scaleCurve.length - 1].time;
+        Time.timeScale = Mathf.Max(0f, scaleCurve.Evaluate(sampleTime));
+    }
+   
+    //事件被停止时执行，整个剧情Sequence被Stop时执行
+    public override void StopEvent()
+    {
+        UndoEvent();
+    }
+   
+    //事件被暂停时执行
+    public override void PauseEvent() {
+       
+    }
+   
+    //事件继续播放时执行
+    public override void ResumeEvent() {
+      
+    }
+ 
+    //事件被撤销时执行
+    public override void UndoEvent()
+    {
+        currentCurveSampleTime = 0.0f;
+        Time.timeScale = prevTimeScale;
+    }
+}
+</code></pre>
+<p>对于每个事件，FireEvent和ProcessEvent是必须要实现的，其他方法可选。</p>
+<p>建议通常情况下，除了上述两个事件外，EndEvent、StopEvent和UndoEvent都最好实现以下，用来对FireEvent和ProcessEvent进行逆操作，因为剧情很大一部分事件都是在不运行游戏下执行，如果不执行逆操作，运行几遍后，整个场景就真的惨不忍睹，编辑不下去了。比如某个事件创建了一个特效，没有在事件结束后删除这个特效，那么这个特效就会一直存在场景中，多执行几遍就多了多少特效在场景里，而美术会场景忘记删除的。当然如果是在运行时是不会有这种情况的，但运行时的编辑是没法保存的。</p>
+<h1 id="五-自定义界面">五、自定义界面</h1>
+<p>对于一个事件，我们实现了事件的功能后，基本上是可以撒手不管的，对于事件在Sequence的编辑界面上的显示，Sequence已经做好了默认的封装，上面会有事件的名字和相应的持续长度等。<br>
+但有时，在一段剧情中，一个事件被添加和多次，就有些难以区分这些相同的事件都分别干了些什么。比如播放特效，一段剧情播放了3个特效总共10次，10个事件都显示为播放特效，就很难分清哪个特效事件播放的是哪个特效。如果要替换其中一个特效，就需要把10个特效事件都看一遍才能找到需要被替换的特效事件，这非常的不方便。如果每个特效事件都能吧自己播放的特效名显示在编辑面板中，就方便多了。要达成这个效果，就不得不扩展EventEditor了。<br>
+EventEditor主要是用来自定义事件在Timeline上的显示内容。扩展如下：</p>
+<pre><code>[CustomUSEditor(typeof(USTimeScaleEvent))]
+public class USTimeScaleEventEditor : USEventBaseEditor
+{
+    public override Rect RenderEvent(Rect myArea)
+    {
+        USTimeScaleEvent timeScaleEvent = TargetEvent as USTimeScaleEvent;
+       
+        timeScaleEvent.Duration = timeScaleEvent.scaleCurve[timeScaleEvent.scaleCurve.length-1].time;
+       
+        if (timeScaleEvent.Duration &gt; 0)
+        {
+            float endPosition = ConvertTimeToXPos(timeScaleEvent.FireTime + timeScaleEvent.Duration);
+            myArea.width = endPosition - myArea.x;
+        }
+        DrawDefaultBox(myArea);
+ 
+        using(new WellFired.Shared.GUIBeginArea(myArea))
+        {
+            GUILayout.Label(GetReadableEventName(), DefaultLabel);
+        }
+ 
+        return myArea;
+    }
+   
+    //折叠模式下的自定义显示
+    public override void RenderCollapsedEvent( Rect area ) {
+        base.RenderCollapsedEvent (area);
+    }
+}
+</code></pre>
+<p>该类其他可被扩展的方法<br>
+<img src="https://www.7fires.cn/post-images/1606309276041.png" alt="" loading="lazy"><br>
+(在展开模式下，瞬时事件 会有一个固定的长度，而这个长度常常会跟持续事件弄混淆，偶尔会让美术分不清他们；在折叠模式下，瞬时事件和持续时间均显示为一个小竖条，同样也分不清哪些是瞬时事件，哪些是持续事件。不过没关系，在后面连载博文中我会教你们修改内部源码来纠正这样的问题)。</p>
+<h1 id="六-usequencer的优缺点">六、USequencer的优缺点</h1>
+<p>USequencer这款剧情插件，优点还是很多的！首先就是对GameObject属性的控制，可以像Unity的Animation动画一样通过关键帧动画控制GameObject的位置、旋转、数值变化、开关等，简直就是Animation的替代品；然后就是源生支持Mecanim动画系统，不论是简单的动画播放或者多层动画控制都是得心应手，信手拈来；其次当然是强大的事件系统，几乎可以控制所有的东西，无所不能；最后当然是USequencer可以直接在不Play的情况下预览剧情、播放动画和特效等，这极大的方便了美术的制作和使用，而对于那些与场景交互密切的剧情，就更加需要这个功能，想象一下不用每修改一次参数就要Play一下去看修改的对不对，靠的紧不紧等，Unity的特效不就是这样的么，哈哈~</p>
+<p>说完优点当然还要说一下缺点，首先依然还是属性控制，在保存为Prefab的时候，会生成很多的小文件，几乎是一个关键帧对应一个小文件，对项目目录结构不友好，保存完后从新打开需要一个个的解析这些小文件，还常常失败，导致要重新制作等；然后就是源生的播放Mecanim那套东西，也常常出各种问题，不是Animator找不到，就是Animation找不到，一些动画控制器状态的增删改查也会引起做好的剧情打不开等等；其次是事件系统，这个到没出什么BUG，只是原版的瞬时事件和持续事件在原版默认情况下显示不够准确，有时会造成美术的误读等，事件系统除了这个就没有其他问题，最后还是编辑模式下的预览，编辑模式下，毕竟不具备我们游戏运行时所需要的那些环境(比如当前玩家Animator)，也因此我们常常要写两份代码，一份在编辑时执行，一份在运行时执行，这点非常的考验人。</p>
+<p>看到前面那大段的缺点，是不是有种被欺骗的感觉。问题这么多，为啥还要推荐给你们。其实这些缺点或者问题在对比完其他的剧情插件后，这些都不是问题。一个功能强大、易用，有点小毛病的与一个功能简单、不易使用及维护的相比，我还是毅然的选择了前者。而且时间和实践告诉我当初的选择没有错，USequencer的那些小毛病要么可以轻易规避，要么就是简单修改后就永远正常了。</p>
+<p>就我们项目，截止目前为止，已经使用USequencer插件制作出了超过150段剧情，总时间已经超过2000s，而且USequencer插件现在已经不仅限于制作游戏剧情，我们现在的一些对内对外的宣传视频，也是用USequencer编辑的，未来也许还会用这个修改过后的USequencer做一些连载视频或动画片等。</p>
+<h1 id="七-未尽事宜">七、未尽事宜</h1>
+<p>作为一款插件，USequence绝对是一款会让你又爱又恨的插件。爱他的整个框架结构，非常强大、非常复杂，但修改和新增功能真的很简单(只要你能看懂和明白他里面的结构)，恨他明明可以做得更好更漂亮更实用，但他却没有这样做。</p>
+<p>另外对于USequencer的那些问题及相关修改方法，我会在后续的博文中慢慢讲解。最后附上一张目前使用的USequencer的截图，就是我们修改后的结果：<br>
+<img src="https://www.7fires.cn/post-images/1606309325036.png" alt="" loading="lazy"></p>
+<h1 id="八-初次导入时的一些问题">八、初次导入时的一些问题</h1>
+<p>从商店购买下载好该插件后，导入现有的工程，这里有两步需要注意。<br>
+1、不要使用默认弹出的导入框导入插件，不管怎么导都会有问题<br>
+<img src="https://www.7fires.cn/post-images/1606309342838.png" alt="" loading="lazy"></p>
+<p>2、插件文件下的两个.unitypackage文件都要导入<br>
+<img src="https://www.7fires.cn/post-images/1606309361114.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Unity Editor 10行代码搞定Hierarchy排序]]></title>
+        <id>https://www.7fires.cn/post/179/</id>
+        <link href="https://www.7fires.cn/post/179/">
+        </link>
+        <updated>2016-07-09T12:47:09.000Z</updated>
+        <content type="html"><![CDATA[<p>在日常的工作和研究中，当给我们的场景摆放过多的物件的时候，Hierarchy面板就会变得杂乱不堪。比如这样：<br>
+<img src="https://www.7fires.cn/post-images/1606308654741.png" alt="" loading="lazy"></p>
+<p>过多的层次结构充斥在里面，根层的物件毫无序列可言，整个层次面板显示非常的杂乱不堪，如果还有使用代码添加的物件，那就更加的惨不忍睹。里面的物件没有任何的规律可言(当然如果你们的美术有强迫症的话，也许会把物件分类，按规律排列的整齐，如果不是就惨了)。如果费时费力的排列好里面的结构，过一段时间就又会变乱。<br>
+而如果要在杂乱的层次结构中找到我们想要的物体就需要费些体力和眼神了，就如同在垃圾堆里找宝石一样。</p>
+<p>如果Hierarchy能按字母排序的话，那该多好！一个简单的字母排序，就会让整个结构看起来都是规规矩矩、整整齐齐。不论怎样也都会好过没有排序的。<br>
+比如下面这样：<br>
+<img src="https://www.7fires.cn/post-images/1606308683393.png" alt="" loading="lazy"></p>
+<p>别放弃，天无绝人之路，想让Hierarchy按字母排序，非常的简单，整个文件只有10行代码，其中using xxx占用了2行，符号占用2行，类名和函数名各1行，真正工作的代码只有4行。<br>
+代码结构就是下面这样<br>
+<img src="https://www.7fires.cn/post-images/1606308696788.png" alt="" loading="lazy"><br>
+效果就是下面这个样子<br>
+<img src="https://www.7fires.cn/post-images/1606308711391.gif" alt="" loading="lazy"></p>
+<p>哈哈，不逗你了，下面开始说正经事了！！！</p>
+<p>这是按字母升序排列</p>
+<pre><code>public class AscendingSort : BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return EditorUtility .NaturalCompare( lhs.name , rhs.name);
+    }
+}
+</code></pre>
+<p>按字母降序排列</p>
+<pre><code>public class DescendingSort : BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return 1; }
+        if (rhs == null) { return -1; }
+        return EditorUtility .NaturalCompare( rhs.name , lhs.name);
+    }
+}
+</code></pre>
+<p>按InstanceID排序</p>
+<pre><code>public class InstanceIDSort : BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return lhs .GetInstanceID(). CompareTo(rhs .GetInstanceID());
+    }
+}
+</code></pre>
+<p>按HashCode排序</p>
+<pre><code>public class HashCodeSort : BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return lhs .GetHashCode(). CompareTo(rhs .GetHashCode());
+    }
+}
+</code></pre>
+<p>InstanceID排序与HashCode排序是一样的，没有看出其中的差异。<br>
+当然除了排序，我们还可以干点其他的，比如把排序下拉框改成中文的，一样很简单，如下<br>
+如果想要你的下拉选项变成中文的，没关系一样可以搞定(以升序排列为例)，如下</p>
+<pre><code>public class 升序排列: BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return EditorUtility .NaturalCompare( lhs.name , rhs.name);
+    }
+}
+</code></pre>
+<p>别担心，Unity的类名是可以使用中文名的，你就大胆的使用吧。</p>
+<p>如果你不满足于只是下拉选择框是中文的，还希望上面的图标也变成中文，没关系，一样可以搞定，只需复写一下content就可以了</p>
+<pre><code>public class 升序排列 : BaseHierarchySort
+{
+    public override int Compare( GameObject lhs , GameObject rhs)
+    {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return EditorUtility .NaturalCompare( lhs.name , rhs.name);
+    }
+    public override GUIContent content {
+        get { return new GUIContent( &quot;升序&quot;); }
+    }
+}
+</code></pre>
+<p>显示图片也是没有问题的哦，给个图文混合显示的吧</p>
+<pre><code>public class AscendingSort : BaseHierarchySort {
+    private readonly GUIContent _content;
+ 
+    public AscendingSort() {
+        Texture2D image = Resources. Load&lt;Texture2D &gt;(&quot;Fire&quot;);
+        if (image ) {
+            _content = new GUIContent( &quot;升序&quot;, image , &quot;升序排列&quot;);
+        }
+        else {
+            _content = new GUIContent( &quot;升序&quot;, &quot;升序排列&quot; );
+        }
+    }
+ 
+    public override GUIContent content {
+        get { return _content; }
+    }
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return EditorUtility .NaturalCompare( lhs.name , rhs.name);
+    }
+}
+</code></pre>
+<p>当然上面的也可以换成自定义的图片，自定义文字，自定义图片+文字，也可以给与美术进行提示等等。全部只看你返回的是一个什么样的content了，这里就不做更多的介绍了</p>
+<p>项目工程下载地址 https://github.com/sevenfires/HierarchySort.git</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Unity3D Shader加载时机和预编译]]></title>
+        <id>https://www.7fires.cn/post/174/</id>
+        <link href="https://www.7fires.cn/post/174/">
+        </link>
+        <updated>2016-07-06T12:39:21.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="一-shader与shader-variants">一、Shader与Shader Variants</h1>
+<p>着色器(Shader)是在GPU上执行的小程序，通常情况下，我们自己写的一个着色器文件(xxx.shader)对应一个着色器变体，对应一个GPU程序。但如果着色器中引入了关键字(Keyword)或者可变的RenderSetup等技术，那么一个着色器文件就可能对应N个着色器变体，对应N个GPU程序。</p>
+<p>怎样理解这里面的对应关系呢？可以这样简单的认为，着色器文件:着色器变体:GPU Program=1:N:N</p>
+<p>查看一个着色器对应几个变体的方法：</p>
+<h2 id="11-点击着色器文件在inspector面板中查看">1.1、点击着色器文件在Inspector面板中查看</h2>
+<p><img src="https://www.7fires.cn/post-images/1606308036011.png" alt="" loading="lazy"><br>
+就这样一个普通的新建的SurfaceShader就有569个变体，全编译会生成569个GPU程序</p>
+<h2 id="12-在shadervaruantscollection中查看">1.2、在ShaderVaruantsCollection中查看</h2>
+<p><img src="https://www.7fires.cn/post-images/1606308071933.png" alt="" loading="lazy"><br>
+在这里显示有356+4=360个变体，少了9个,原因嘛就要问Unity官方了，或者你也可以在留言中告诉我</p>
+<h1 id="二-加载和编译">二、加载和编译</h1>
+<p>加载和编译着色器需要一点点时间。通常加载单个独立的GPU程序不需要多少时间，但是就如上面所说，着色器有时会有很多的着色器变体。<br>
+比如Unity 5.x的Standerd Shader，如果完全编译的话，会有几万个不同的GPU程序(后面会有图示)，而这会引发两个问题：</p>
+<ol>
+<li>大量的着色器变体会增加游戏打包时间，会让游戏的总包体积变大；</li>
+<li>加载大量的着色器变体会很慢，并且消耗大量的内存。<br>
+当然这两个问题都是我们不愿意看到了，怎么解决呢？继续往下看。</li>
+</ol>
+<h1 id="三-剔除多余着色器变体">三、剔除多余着色器变体</h1>
+<h2 id="31-在生成时剔除多余着色器变体">3.1、在生成时剔除多余着色器变体</h2>
+<p>在生成游戏包时，Unity可以检测如果某些内置的着色器变体没有被使用到，就不会把他们打到游戏包中，这个方法可适用于以下几种情况：</p>
+<ol>
+<li>个别着色器特性，比如使用 #pragma shader_feature的着色器，如果没有材质使用到了这个特性，那么就不会把它打包进去；</li>
+<li>没有被任何场景使用到的雾效(Fog)或光照贴图模式(Lightmap)的着色器变体，也不会打包进去。<br>
+通过以上两种方式的结合可以大大减少着色器变体的数量。比如Standard着色器有35254中变体，如果完全编译的话，就会占用有几百兆存储，但是一般的工程用到的只会有几兆，而且打包时会进一步压缩。</li>
+</ol>
+<h2 id="32-在加载时剔除多余着色器变体">3.2、在加载时剔除多余着色器变体</h2>
+<h3 id="1unity-shader的默认加载行为">1)Unity Shader的默认加载行为</h3>
+<p>在默认设置中，Unity加载着色器文件到内存中，但内部使用的着色器变体(GPUProgram)直到真正使用的时候才会创建(这里要区分4.x和5.x，后面解释)。这也就是说，打进游戏包中的着色器变体只是可能被用到，但是在用到之前是不消耗加载时间和占用内存的。<br>
+比如，着色器常常有一个处理点光源阴影的变体，但是如果游戏中从来没有使用过点光源阴影，那么就不会加载这个相应的变体。<br>
+当然这个默认的行为就会造成一些变体在第一次被用到的时候会出现卡顿(因为需要加载一个新的GPU程序代码到图形驱动中)，这是不能接受的，因此Unity提供了另一个方案来解决这个问题。</p>
+<p>PS:shader加载造成的卡顿有两种情况：<br>
+i、着色器变种已经打包到APP中，只需要加载该变体，创建GPUProgram就可以了<br>
+<img src="https://www.7fires.cn/post-images/1606308170059.png" alt="" loading="lazy"></p>
+<p>ii、着色器变种没用被打包，这时需要shaderlab文件进行解析和编译相应的变种，然后创建GUPProgram<br>
+<img src="https://www.7fires.cn/post-images/1606308184485.png" alt="" loading="lazy"></p>
+<p>以上两种情况都是实际中遇到过的，但后一种使用目前的项目工程难以重现，所以图片来自网络，只作参考。等有时间了在单独创建测试工程来重现这两种情况。</p>
+<h3 id="2使用着色器变体群shadervariantcollection">2)使用着色器变体群(ShaderVariantCollection)</h3>
+<p>ShaderVariantCollection是Unity在5.x后提供的一个着色器预编译的方案，使用它可以轻松的指定需要着色器变体，在需要的时候加载、解析、编译等一条龙服务。<br>
+ShaderVariantCollection其实就是一个着色器资源列表，是一个由通道类型+着色器关键字组合的列表。如下图<br>
+<img src="https://www.7fires.cn/post-images/1606308208282.png" alt="" loading="lazy"></p>
+<p>添加着色器窗口<br>
+<img src="https://www.7fires.cn/post-images/1606308223747.png" alt="" loading="lazy"></p>
+<p>添加着色器变体就是如下一个关键字选择器<br>
+<img src="https://www.7fires.cn/post-images/1606308238997.png" alt="" loading="lazy"></p>
+<h1 id="四-创建shadervariantcollection">四、创建ShaderVariantCollection</h1>
+<h2 id="41-全手工创建">4.1、全手工创建</h2>
+<p>这是最笨的一种方法，需要自己在Project视图下创建ShaderVariantCollection资源，然后使用上面介绍的两个窗口自己添加着色器变体<br>
+<img src="https://www.7fires.cn/post-images/1606308263424.png" alt="" loading="lazy"></p>
+<h2 id="42-使用unity收集当前使用到的着色器变体">4.2、使用Unity收集当前使用到的着色器变体</h2>
+<p>为了最快速、最方便的帮助我们创建和收集那些真正被用到的着色器和他们的变体，Unity已经在编辑器中内置了可以追踪那些已经被使用到的着色器和他们的变体，并可以直接生成相应的ShaderVariantCollection资源。<br>
+打开图形设置面板(Edit-&gt;Project Settings-&gt;Graphics)<br>
+<img src="https://www.7fires.cn/post-images/1606308283346.png" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="1"><img src="https://www.7fires.cn/post-images/1606308290501.png" alt="" loading="lazy"></figure>
+<p>这时候只需要依次打开我们的所有场景，把需要的物体都显示一遍，Unity就会自动记录下来哪些着色器的哪些着色器变体已经被使用到。统计完后只需点击下面的保存按钮就可以生成我们所需要的ShaderVariantCollection资源。当然你也可以为你的每一个场景或者按需生成足够多的ShaderVariantCollection资源。</p>
+<h1 id="五-使用shadervariantcollection">五、使用ShaderVariantCollection</h1>
+<h2 id="51-启动时加载">5.1、启动时加载</h2>
+<p>最简单最粗暴的使用方式就是在游戏启动的瞬间就直接加载ShaderVariantCollection资源并编译里面的着色器变体，Unity已经为我们做好这一步了，依然还是在图形设置面板里，只需把需要启动是就编译的ShaderVariantCollection添加在Preloaded Shaders里面，如下图所示：<br>
+<img src="https://www.7fires.cn/post-images/1606308319690.png" alt="" loading="lazy"></p>
+<h2 id="52-使用代码加载">5.2、使用代码加载</h2>
+<p>由于ShaderVariantCollection也是一种资源，可以跟纹理、模型等等资源一起打包和加载等，只需在加载之后调用一句WarmUp，如下：</p>
+<pre><code>ShaderVariantCollection shaderVariantCollection = Resources.Load &lt;ShaderVariantCollection&gt;( &quot;MainShaderVariant&quot;);
+if (shaderVariantCollection )
+      shaderVariantCollection.WarmUp ();
+</code></pre>
+<h1 id="六-一些后话">六、一些后话</h1>
+<p>目前来说，对于shader的预编译有两种：<br>
+ShaderVariantCollection::WarmUp和Shader::WarmupAllShaders<br>
+该怎么选择呢？</p>
+<p>1、如果你是Unity4.x，就大胆的使用Shader::WarmupAllShaders吧，因为没得选<br>
+2、如果你是Unity5.x<br>
+i、没有使用5.x新的shader(Standard和StandardSpecular)，自定义shader也没有使用大量关键字等还是可以使用Shader::WarmupAllShaders<br>
+ii、使用了5.x新的shader，自定义shader也使用有大量关键字的话，你可以考虑使用ShaderVariantCollection::WarmUp了<br>
+iii、还有一些很特殊的情况，就看情况而论了</p>
+<p>Unity4.x和5.x对于shader编译上的一些差异：<br>
+在Unity4.x中，只要把shader加载进内存后就会自动的编译该shader，而在Unity5.x中，加载就仅仅只是加载了，如果还需要编译的话，需要游戏中实际使用到或者主动使用shader.WarmupAllShaders又或者ShaderVariantCollection.WarmUp来编译shader。</p>
+<p>至于原因嘛，大概是在Unity5.0以前，每一种shader都比较独立，单个shader对应的变种并不多，所以5.0以前的shader的文件数量会比较多；但是到了5.0以后，引入Standard和StandardSpecular这两个shader后，由于这两个着色器的变种实在太多(Standard有35254个变种，StandardSpecular有32950个变种)，如果这两个着色器全编译，后果就是内存一下少了几百兆(当然这是官方的说法，实际测试貌似不是这样的)。</p>
+<p>如果文中有错误的地方，欢迎指出和留言，如果你有不同的见解，也可以留言告诉我。</p>
+<p>参考资料：<br>
+http://docs.unity3d.com/Manual/OptimizingShaderLoadTime.html</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[MaterialPropertyDrawer自定义Unity材质Inspector之关键字枚举(KeywordEnum)]]></title>
+        <id>https://www.7fires.cn/post/165/</id>
+        <link href="https://www.7fires.cn/post/165/">
+        </link>
+        <updated>2016-01-11T12:34:15.000Z</updated>
+        <content type="html"><![CDATA[<p>在上一篇文章中，我们介绍了材质里面基础的枚举类型，文章在这里：MaterialPropertyDrawer自定义Unity材质Inspector之枚举类型(Enum)，这里的一般都是Unity自带的一些枚举类型，不然剔除(Cull),融合(Blend)等。</p>
+<p>在这一篇文章中，我们要介绍关键字的枚举类型。</p>
+<p>在平时我们书写Shader的过程中都会定义很多的关键字来区分shader的不同用途和功能，当然Unity内置的关键字宏也很多，比如如下代码摘自Lighting.cginc</p>
+<pre><code>inline fixed4 LightingLambert (SurfaceOutput s, UnityGI gi)
+{
+	fixed4 c;
+	c = UnityLambertLight (s, gi.light);
+ 
+	#if defined(DIRLIGHTMAP_SEPARATE)
+		#ifdef LIGHTMAP_ON
+			c += UnityLambertLight (s, gi.light2);
+		#endif
+		#ifdef DYNAMICLIGHTMAP_ON
+			c += UnityLambertLight (s, gi.light3);
+		#endif
+	#endif
+ 
+	#ifdef UNITY_LIGHT_FUNCTION_APPLY_INDIRECT
+		c.rgb += s.Albedo * gi.indirect.diffuse;
+	#endif
+ 
+	return c;
+}
+</code></pre>
+<p>但这简单的几句代码里就定义了 DIRLIGHTMAP_SEPARATE，LIGHTMAP_ON，DYNAMICLIGHTMAP_ON，UNITY_LIGHT_FUNCTION_APPLY_INDIRECT 这4个关键字宏。</p>
+<p>通常定义这些编译宏的好处就是在最少的代码完成最多的功能，而这些宏是给编译器看的。</p>
+<p>对于这些宏的开启与关闭，我们最常见的就是直接在代码里面对齐进行关闭，但这样的操作往往是依赖图形工程师或技术美术的支持，普通的美工和其他人是不敢随便动的。那有没有一种方式，提供一个简单的选择界面，让普通美工或策划来控制这些宏的开启和关闭呢？</p>
+<p>答案当然是有，这就是今天的介绍内容。内容依然来自Unity的官方文档(MaterialPropertyDrawer)。ps:官方文档中有不少错误的地方，希望博友注意哦！</p>
+<h2 id="1-最简单的一种toggle-无参">1、最简单的一种:Toggle 无参</h2>
+<pre><code>//当勾选上时，定义_FANCY_ON这个宏
+[Toggle] _Fancy (&quot;Fancy?&quot;, Int) = 0
+</code></pre>
+<p>也就是当勾选这个参数时，就表示定义了_FANCY_ON这个宏，在代码中使用时#if _FANCY_ON 或 #if defined(_FANCY_ON)  或 #ifdef _FANCY_ON 结果为真。</p>
+<p>完整源码如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerKeywordEnumToggleNull&quot; {
+    Properties
+    {
+        //当勾选上时，定义_FANCY_ON这个宏
+        [Toggle] _Fancy (&quot;Fancy?&quot;, Int) = 0
+    }
+    SubShader
+    {
+        pass 
+        {
+            Tags{ &quot;LightMode&quot;=&quot;ForwardBase&quot;}
+            CGPROGRAM
+            #pragma shader_feature _FANCY_ON
+            #pragma vertex vert
+            #pragma fragment frag
+            #include &quot;UnityCG.cginc&quot;
+ 
+            struct vertOut{
+                float4 pos:SV_POSITION;
+                float4 color:COLOR;
+            };
+            vertOut vert(appdata_base v)
+            {
+                vertOut o = (vertOut)0;
+                o.pos=mul(UNITY_MATRIX_MVP,v.vertex);
+                
+                o.color=float4(1,0,0,1);//红
+                
+                #if _FANCY_ON
+                    o.color=float4(0,1,0,1);//绿
+                #endif
+                
+                return o;
+            }
+            float4 frag(vertOut i):COLOR
+            {
+                return i.color;
+            }
+            ENDCG
+		}//end pass
+	}
+}
+</code></pre>
+<h2 id="2-看上去更易理解的toggle有参">2、看上去更易理解的Toggle:有参</h2>
+<p>其实这种跟上面的那种是一样的，只是Toggle里面带有宏参数，在Toggle里面定义宏的名字，可以跟外面的不一样</p>
+<pre><code>// Will set &quot;ENABLE_FANCY&quot; shader keyword when set
+[Toggle(ENABLE_FANCY)] _Fancy (&quot;Fancy?&quot;, Float) = 0
+</code></pre>
+<p>还是上面类似的例子，源码如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerKeywordEnumToggleNull&quot; {
+	Properties {
+        [Toggle(FANCY_ON)] _Fancy (&quot;Fancy?&quot;, Int) = 0
+	}
+	SubShader {
+		pass{
+            Tags{ &quot;LightMode&quot;=&quot;ForwardBase&quot;}
+            CGPROGRAM
+            #pragma shader_feature FANCY_ON
+            #pragma vertex vert
+            #pragma fragment frag
+            #include &quot;UnityCG.cginc&quot;
+            #include &quot;Lighting.cginc&quot;
+ 
+            struct vertOut{
+                float4 color:COLOR;
+            };
+            vertOut vert(appdata_base v)
+            {
+                vertOut o = (vertOut)0;
+                
+                o.color=float4(1,0,0,1);//红
+                
+                #if FANCY_ON
+                    o.color=float4(0,1,0,1);//绿
+                #endif
+                
+                return o;
+            }
+            float4 frag(vertOut i):COLOR
+            {
+                return i.color;
+            }
+            ENDCG
+		}//end pass
+	}
+}
+</code></pre>
+<h2 id="3-更多状态的关键字定义">3、更多状态的关键字定义</h2>
+<p>在上面的示例中都只定义了一个关键字的开和关，那要定义更多状态的关键字要怎么处理呢？使用KeywordEnum</p>
+<pre><code>// Display a popup with None,Add,Multiply choices.
+// Each option will set _OVERLAY_NONE, _OVERLAY_ADD, _OVERLAY_MULTIPLY shader keywords.
+[KeywordEnum(None, Add, Multiply)] _Overlay (&quot;Overlay mode&quot;, Float) = 0
+</code></pre>
+<p>使用_Overlay一个变量来定义_OVERLAY_NONE，_OVERLAY_ADD， _OVERLAY_MULTIPLY三个关键字的互斥使用。</p>
+<p>我们的示例如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerKeywordEnum&quot; {
+    Properties {
+        [KeywordEnum(Red, Green, Blue)] _ColorMode (&quot;Color Mode&quot;, Float) = 0
+    }
+    SubShader {
+        pass{
+            Tags{ &quot;LightMode&quot;=&quot;ForwardBase&quot;}
+            CGPROGRAM
+            #pragma shader_feature _COLORMODE_RED _COLORMODE_GREEN _COLORMODE_BLUE
+            #pragma vertex vert
+            #pragma fragment frag
+            #include &quot;UnityCG.cginc&quot;
+ 
+            struct vertOut{
+                float4 pos:SV_POSITION;
+                float4 color:COLOR;
+            };
+            vertOut vert(appdata_base v)
+            {
+                vertOut o = (vertOut)0;
+                o.pos = mul(UNITY_MATRIX_MVP,v.vertex);
+                o.color = float4(0,0,0,1);
+                
+                #if _COLORMODE_RED
+                    o.color =float4(1,0,0,1);
+                
+                #elif _COLORMODE_GREEN
+                    o.color = float4(0,1,0,1);
+                
+                #elif _COLORMODE_BLUE
+                    o.color=float4(0,0,1,1);
+                #endif
+                
+                return o;
+            }
+            float4 frag(vertOut i):COLOR
+            {
+                return i.color;
+            }
+            ENDCG
+		}//end pass
+	}
+}
+</code></pre>
+<p>这样的使用，就给用户提供了一个下拉框来选择要激活哪一个关键字，如下所示：<br>
+<img src="https://www.7fires.cn/post-images/1606307866753.png" alt="" loading="lazy"><br>
+这就可以任意切换了，O(∩_∩)O哈哈~</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[MaterialPropertyDrawer自定义Unity材质Inspector之枚举类型(Enum)]]></title>
+        <id>https://www.7fires.cn/post/161/</id>
+        <link href="https://www.7fires.cn/post/161/">
+        </link>
+        <updated>2016-01-08T12:28:57.000Z</updated>
+        <content type="html"><![CDATA[<p>最近发现Unity的一个黑科技(其实很久以前就发现了，只是方便开头而已，哈哈)；可以自定义材质的检视面板，通过这个功能还可以把功能差不多的着色器合并成一个。</p>
+<p>例如有的着色器只是融合方式(Blend)、深度测试开关(ZTest)、渲染队列(RenderQueue)等等不一样，而基本的核心着色代码是一样的。这就是本文即将介绍的枚举类型(其他类型以后介绍)</p>
+<p>本文的研究来自Unity的官网文档MaterialPropertyDrawer</p>
+<h1 id="1-首先看看blendmode上的应用">1、首先看看BlendMode上的应用</h1>
+<p>Shader源码如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerBlendMode&quot; {
+	Properties {
+		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
+		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
+		[Enum(UnityEngine.Rendering.BlendMode)] _SourceBlend (&quot;Source Blend Mode&quot;, Float) = 2        
+		[Enum(UnityEngine.Rendering.BlendMode)] _DestBlend (&quot;Dest Blend Mode&quot;, Float) = 2
+	}
+	SubShader {
+		Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+		LOD 200
+		Blend [_SourceBlend] [_DestBlend]
+		
+		CGPROGRAM
+		#pragma surface surf Lambert
+		fixed4 _Color;
+		sampler2D _MainTex;
+
+		struct Input {
+			float2 uv_MainTex;
+		};
+		void surf (Input IN, inout SurfaceOutput o) {
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			o.Albedo = c.rgb;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	} 
+	FallBack &quot;Diffuse&quot;
+}
+</code></pre>
+<p>通过在属性列表中的Blend模式前添加</p>
+<pre><code>[Enum(UnityEngine.Rendering.BlendMode)]
+</code></pre>
+<p>就可以在检视面板中列举出所有的Blend模式，如图所示：<br>
+<img src="https://www.7fires.cn/post-images/1606307505271.png" alt="" loading="lazy"><br>
+列表中的具体Blend模式就不用我解释了吧。</p>
+<p>当然，某些情况下，我们并不希望列举出所有的混合模式，而只给少数的几个给美术人员使用。这一也是可以实现的，只需要我们自己来定义枚举的数值和显示就可以了。</p>
+<p>源码如下所示：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerBlendModeCustom&quot; {
+	Properties {
+		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
+		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
+		[Enum(One,1,SrcAlpha,5)] _SourceBlend (&quot;Source Blend Mode&quot;, Float) = 1
+		[Enum(One,1,SrcAlpha,5)] _DestBlend (&quot;Dest Blend Mode&quot;, Float) = 1
+	}
+	SubShader {
+		Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+		LOD 200
+		Blend [_SourceBlend] [_DestBlend]
+		
+		CGPROGRAM
+		#pragma surface surf Lambert
+		fixed4 _Color;
+		sampler2D _MainTex;
+ 
+		struct Input {
+			float2 uv_MainTex;
+		};
+		void surf (Input IN, inout SurfaceOutput o) {
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			o.Albedo = c.rgb;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	} 
+	FallBack &quot;Diffuse&quot;
+}
+</code></pre>
+<p>通过在需要枚举的类型前面添加如下代码就可以了：</p>
+<pre><code>[Enum(One,1,SrcAlpha,5)]
+</code></pre>
+<p>如图所示：<br>
+<img src="https://www.7fires.cn/post-images/1606307550866.png" alt="" loading="lazy"></p>
+<pre><code>注意：枚举中的值不能随便定义，一定要跟融合的模型一一对应上，具体可以参看BlendMode中的定义：
+</code></pre>
+<pre><code>Zero             = 0,
+One              = 1,
+DstColor         = 2,
+SrcColor         = 3,
+OneMinusDstColor = 4,
+SrcAlpha         = 5,
+OneMinusSrcColor = 6,
+DstAlpha         = 7,
+OneMinusDstAlpha = 8,
+SrcAlphaSaturate = 9,
+OneMinusSrcAlpha = 10
+</code></pre>
+<p>#2、在来看看在其他属性设置上的使用<br>
+因为在其他属性上的设置都类似于BlendMode的设置，这里就不单独举例某一个，就直接列出所有的吧，然后自己在里面查找自己需要的属性，完整版源码如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerEnum&quot; {
+	Properties {
+		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
+		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull (&quot;Cull Mode&quot;, Float) = 1
+        [Enum(Off,0,On,1)] _ZWrite (&quot;ZWrite&quot;, Float) = 1
+        [Enum(Less,0, Greater,1, LEqual,2, GEqual,3, Equal,4, NotEqual,5, Always,6)] _ZTest (&quot;ZTest&quot;, Float) = 1
+		[Enum(UnityEngine.Rendering.BlendMode)] _SourceBlend (&quot;Source Blend Mode&quot;, Float) = 2        
+		[Enum(UnityEngine.Rendering.BlendMode)] _DestBlend (&quot;Dest Blend Mode&quot;, Float) = 2
+        _CutOff (&quot;Cut Off&quot;, float) = 0.5
+	}
+	SubShader {
+		Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+		LOD 200
+        Cull [_Cull]
+        ZWrite [_ZWrite]
+        ZTest [_ZTest]
+        Fog{
+            Mode Global
+        }
+        AlphaTest Less [_CutOff]
+		Blend [_SourceBlend] [_DestBlend]
+		
+		CGPROGRAM
+		#pragma surface surf Lambert
+		fixed4 _Color;
+		sampler2D _MainTex;
+ 
+		struct Input {
+			float2 uv_MainTex;
+		};
+		void surf (Input IN, inout SurfaceOutput o) {
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			o.Albedo = c.rgb;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	} 
+	FallBack &quot;Diffuse&quot;
+}
+</code></pre>
+<p>暂时就先列举这么多吧，剩下没有列举的可以根据规则自己扩展。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[删除Prefab或场景物件有脚本缺失的组件]]></title>
+        <id>https://www.7fires.cn/post/155/</id>
+        <link href="https://www.7fires.cn/post/155/">
+        </link>
+        <updated>2015-12-30T12:24:25.000Z</updated>
+        <content type="html"><![CDATA[<p>好久没有写博客了，真不好意思！本人是个拖延症患者当然还有一部分原因是本人比较懒，O(∩_∩)O哈哈~</p>
+<p>上一篇博文介绍了通过简单的方式来查找Prefab或场景物件是否有丢脚本的(地址：http://www.7fires.cn/unitytechnique/149)，但没有介绍在检查到脚本后改怎么去删除这些组件，难道是让美术或者策划去手工一个个的修改么？这当然是不行的，这次就来说说怎么删除这些缺失的组件。</p>
+<p>研究过Unity的都知道，Unity的Prefab或者场景都是通过序列化的方式来保存，而Unity之所以会报丢失脚本引用的问题就是在反序列化时，根据序列化中的数据，找不到原先所引用的脚本，如果不想通过手工的方式来删除他的话，就只能通过脚本修改序列化的数据来达到真正的删除缺失的组件。</p>
+<p>脚本代码如下：</p>
+<pre><code>[MenuItem(&quot;Tools/清除丢失组件&quot;)]
+public static void ClearMissComponent()
+{
+    Transform[] transforms = Selection.GetTransforms(SelectionMode.Deep);
+    foreach (var transform in transforms) {
+        ClearMissComponent(transform.gameObject);
+    }
+}
+ 
+private static void ClearMissComponent(GameObject go) {
+    if (go == null) {
+        return;
+    }
+    var components = go.GetComponents&lt;Component&gt;();
+ 
+    SerializedObject serializedObject = new SerializedObject(go);
+    SerializedProperty prop = serializedObject.FindProperty(&quot;m_Component&quot;);
+ 
+    int r = 0;
+    for (int j = 0; j &lt; components.Length; j++) {
+        if (components[j] == null) {
+            prop.DeleteArrayElementAtIndex(j - r);
+            r++;
+            Debug.LogWarning(&quot;移除丢失组件: &quot; + go.name, go);
+        }
+    }
+    serializedObject.ApplyModifiedProperties();
+}
+</code></pre>
+<p>通过上面的代码，只需选中需要检查的Prefab或者场景物件，就可以删除里面丢失了脚本的组件</p>
 ]]></content>
     </entry>
 </feed>

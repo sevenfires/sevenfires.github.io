@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>UnityEditor 把所有未保存的资源更改写入磁盘 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="最近在跟美术沟通修改Prefab时，在修改完成后即使点击了apply按钮，刚刚的修改也没有写入磁盘，原先的资源依然会是一个SVN的绿勾，只能把Unity关了，才会显示修改。
+经过美术人员的描述，浅云认为这是Unity做的一个写缓存机制，可以..." />
+    <meta name="keywords" content="UnityEditor,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">UnityEditor 把所有未保存的资源更改写入磁盘</h2>
+            <div class="post-date">2015-05-24</div>
+            
+            <div class="post-content" v-pre>
+              <p>最近在跟美术沟通修改Prefab时，在修改完成后即使点击了apply按钮，刚刚的修改也没有写入磁盘，原先的资源依然会是一个SVN的绿勾，只能把Unity关了，才会显示修改。<br>
+经过美术人员的描述，浅云认为这是Unity做的一个写缓存机制，可以避免编辑器在编辑过程中频繁的写磁盘(电脑写磁盘会比较慢，写的过程中Unity也会出现卡顿现象等等)，这算Unity的一个优化功能，只是在某些时候造成了美术人员的困惑，在需要及时提交资源时，需要关闭Unity才能触发Unity清写缓存，把修改写入磁盘，那能不能在不关Unity的情况下也能让Unity清写缓存，把修改写入磁盘呢？<br>
+答案当然是可以的。<br>
+美术修改的资源可以统一归为AssetDatabase管理，在这个类中有这样一个函数AssetDatabase.SaveAssets 保存资源</p>
+<p>Description<br>
+Writes all unsaved asset changes to disk.<br>
+将所有未保存的资源更改写入磁盘<br>
+具体怎么用呢，看下面</p>
+<pre><code>[MenuItem(&quot;Assets/把资源修改存盘 %&amp;s&quot;)]
+public static void MenuSaveAssets() {
+    EditorApplication.SaveAssets();
+}
+</code></pre>
+<p>只需要创建一个菜单命令就可以，后面的 %&amp;s 是快捷键的意思 Ctrl + Alt + s<br>
+<img src="https://www.7fires.cn/post-images/1606306519228.png" alt="" loading="lazy"></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/78/">
+                  <h3 class="post-title">
+                    UnityEditor之MenuItem快捷键
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

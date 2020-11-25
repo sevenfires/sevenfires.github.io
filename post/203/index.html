@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>【合并Shader】合并渲染状态 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="年关将至，整理今年的大小事务，看看哪些是可以拖到年后的。整理发现今年一直想写，却迟迟未动手写的《合并Shader》还没有开工。是的，如你所见这是在开一个新坑，不多挖点坑，将来怎么会有意愿去填坑呢！！！当然更早的《USequencer系列》也..." />
+    <meta name="keywords" content="Shader,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">【合并Shader】合并渲染状态</h2>
+            <div class="post-date">2017-01-20</div>
+            
+            <div class="post-content" v-pre>
+              <p>年关将至，整理今年的大小事务，看看哪些是可以拖到年后的。整理发现今年一直想写，却迟迟未动手写的《合并Shader》还没有开工。是的，如你所见这是在开一个新坑，不多挖点坑，将来怎么会有意愿去填坑呢！！！当然更早的《USequencer系列》也会一直更新，毕竟USequencer最大的问题还没有解决，对于这个又爱又恨的插件，我会一直跟到底。<br>
+还是先说说这个新坑吧，《合并Shader》系列旨在介绍一些技能和方法，用来把数量繁多的Shader进行减量，在保证功能不打折的情况下，精简Shader数量，原理就是把相似功能的Shader文件合并在一个文件里。当然学过这些技能后，极致情况下可以做到把所有的Shader文件合并成一个，如Unity 5.x的Standard着色器，但我不会建议你这样做，原因嘛，你尝试过后就会知道，我就不多说，因为我没有尝试过，嘿嘿！本系列对一些常用的，不常用的，正派的，歪门邪道的技能和方法都会有所涉猎。林林总总的技能和方法中，我们尽量遵从从简到繁的方式来依次遍历。<br>
+在数学中，我们学习过：把多项式中的同类项合并成一项叫做同类项的合并，也叫合并同类项。同理，提取Shader的相似部分，把多个Shader合并成一个就叫做Shader的合并，也叫合并Shader，偶尔也会引用数学的名词来称呼他为Shader的合并同类项。<br>
+Shader的合并方式方法有很多，根据不同的合并技能和方法，可以画分为不同的派系。今天优先介绍一种不太常见，但又很实用的派系，往下看。<br>
+王婆卖瓜，自卖自夸， 让我再多说几句废话。对于Shader的合并，首先让人想到的应该是宏定义，相信宏定义也是大家应用最广，最先接触到的，使用自然也不再话下，毕竟由于GPU的特殊性，Shader里常常通篇都充满了各种宏定义。当然，该系列会对宏定义有所介绍，他可是Shader合并里功高盖世的重要角色，很多地方都会有他的身影。但对他的介绍不在这一篇，也许会是下一篇，因为他还不是我认为的最简单的合并Shader方式。至于最简单的合并Shader的方式，应该是使用Unity已经预先定制好的几种MaterialPropertyDrawer来合并Shader的方式。只用修改2行代码，就可以搞定一类Shader的合并，该方法主要用来合并那些只是渲染状态不一样的Shader。</p>
+<h1 id="一-初次简单使用">一、初次简单使用</h1>
+<p>一个完整的Shader，他的渲染状态变量有很多种，由于不是每一种状态的改变都能很明显的看到结果，而作为初次使用，优先选择一种最明显的、最容易懂的状态作为我们的测试用例，他就是ZTest，深度比较。对ZTest不太了解的朋友，可以看看官方的学习文档或者查看一下相关技术书籍，我就不在这里具体介绍这个状态了。<br>
+1.1 首先我们选用的是Unity官方提供的一个最常用Shader：Normal-Diffuse.shader(Legacy Shaders/Diffuse)</p>
+<p>1.2 在属性列表(Properties)中添加一行</p>
+<pre><code>[Enum(UnityEngine.Rendering.CompareFunction)] _ZTest (&quot;ZTest&quot;, Float) = 2
+</code></pre>
+<p>1.3 在SubShader中添加一行</p>
+<pre><code>ZTest [_ZTest]
+</code></pre>
+<p>1.4 完整的Shader</p>
+<pre><code>Shader &quot;ShaderCombine/01.ShaderCombineSimpleZTest&quot;
+{
+    Properties {
+        _Color (&quot;Main Color&quot;, Color) = (1,1,1,1)
+        _MainTex (&quot;Base (RGB)&quot;, 2D) = &quot;white&quot; {}
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest (&quot;ZTest&quot;, Float) = 2
+    }
+    SubShader {
+        Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+        LOD 200
+        ZTest [_ZTest]
+        CGPROGRAM
+        #pragma surface surf Lambert
+        sampler2D _MainTex;
+        fixed4 _Color;
+        struct Input {
+            float2 uv_MainTex;
+        };
+        void surf (Input IN, inout SurfaceOutput o) {
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+            o.Albedo = c.rgb;
+            o.Alpha = c.a;
+        }
+        ENDCG
+    }
+    Fallback &quot;Legacy Shaders/VertexLit&quot;
+}
+</code></pre>
+<p>只用添加这两行代码，我们就可以再Inspector面板中控制使用该Shader物体的深度测试方法。</p>
+<p>1.5 直观展示<br>
+在Unity中的测试示例是这样的：<br>
+<img src="https://www.7fires.cn/post-images/1606310513788.gif" alt="" loading="lazy"><br>
+当然大家也可以通过这个示例测试一下每一种深度测试的方法是否与你心中所想或之前所学的是否冲突。</p>
+<h1 id="二-再次深入使用">二、再次深入使用</h1>
+<p>在上面的例子中，我们只使用了深度测试。但对于我们来说，单单一个深度测试肯定满足不了我的，我们还需要更多、更多的状态，比如背面剔除、混合模式等等。<br>
+在这一节中，我列举出了一些常用的状态控制量，对于一些不常用的模板什么的，就不在这里列举。当然对于没有列举的，可以依葫芦画瓢，大部分基本都是可行的。</p>
+<h2 id="21-一个大而全的简单示例shader如下">2.1 一个大而全的简单示例Shader如下：</h2>
+<pre><code>Shader &quot;ShaderCombine/02.ShaderCombineCommonState&quot;
+{
+    Properties {
+        _Color (&quot;Main Color&quot;, Color) = (1,1,1,1)
+        _MainTex (&quot;Base (RGB)&quot;, 2D) = &quot;white&quot; {}
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull (&quot;Cull Mode&quot;, Float) = 1
+        [Enum(Off,0,On,1)] _ZWrite (&quot;ZWrite&quot;, Float) = 1
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest (&quot;ZTest&quot;, Float) = 1
+        [Enum(UnityEngine.Rendering.BlendMode)] _SourceBlend (&quot;Source Blend Mode&quot;, Float) = 2        
+        [Enum(UnityEngine.Rendering.BlendMode)] _DestBlend (&quot;Dest Blend Mode&quot;, Float) = 2
+    }
+    SubShader {
+        Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+        LOD 200
+        ZTest [_ZTest]
+        Cull [_Cull]
+        ZWrite [_ZWrite]
+        ZTest [_ZTest]
+        Blend [_SourceBlend] [_DestBlend]
+        CGPROGRAM
+        #pragma surface surf Lambert
+        sampler2D _MainTex;
+        fixed4 _Color;
+        struct Input {
+            float2 uv_MainTex;
+        };
+        void surf (Input IN, inout SurfaceOutput o) {
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+            o.Albedo = c.rgb;
+            o.Alpha = c.a;
+        }
+        ENDCG
+    }
+    Fallback &quot;Legacy Shaders/VertexLit&quot;
+}
+</code></pre>
+<h2 id="22-直观展示">2.2 直观展示</h2>
+<p>应用效果：<br>
+<img src="https://www.7fires.cn/post-images/1606310833467.gif" alt="" loading="lazy"></p>
+<h1 id="三-有限自定义">三、有限自定义</h1>
+<p>在上面的示例中，我们都是使用Unity预先定义好的一些枚举类型，比如UnityEngine.Rendering.CompareFunction，UnityEngine.Rendering.BlendMode等。这些定义好的类型把每个状态可能的选项都一一列举了，但有时候我们并不需要这么多选项，或者说我们并不希望给美术列举出所有的可选项，毕竟很多的选项我们可能做完整个项目或者几个项目都不会使用到，而过多的选项也会带来很多的麻烦。或者换一个说法，我希望我们的功能使用起来简单易懂，不易出错并且可控，那就需要我们开发做更多的工作，去掉那些”无用”的选项。其实说这么废话，无非就是我们能不能自己定义每个状态的选项呢？答案当然是可以的。</p>
+<p>在给出自定义方式前，我们先来熟悉一下Unity给我们提供的这几个枚举类型。</p>
+<h2 id="31-剔除模式">3.1 剔除模式</h2>
+<pre><code>UnityEngine.Rendering.CullMode：
+public enum CullMode
+{       
+    Off   = 0,    //Disable culling.       
+    Front = 1,    //Cull front-facing geometry.       
+    Back  = 2     //Cull back-facing geometry.
+}
+</code></pre>
+<h2 id="32-比较方式">3.2 比较方式</h2>
+<p>该比较方式通用与深度比较和模板比较</p>
+<pre><code>UnityEngine.Rendering.CompareFunction
+//Depth or stencil comparison function.
+public enum CompareFunction
+{
+    Disabled     = 0,   //Depth or stencil test is disabled.
+    Never        = 1,   //Never pass depth or stencil test.
+    Less         = 2,   //Pass depth or stencil test when new value is less than old one.
+    Equal        = 3,   //Pass depth or stencil test when values are equal.
+    LessEqual    = 4,   //Pass depth or stencil test when new value is less or equal than old one.
+    Greater      = 5,   //Pass depth or stencil test when new value is greater than old one.
+    NotEqual     = 6,   //Pass depth or stencil test when values are different.
+    GreaterEqual = 7,   //Pass depth or stencil test when new value is greater or equal than old one.
+    Always       = 8    //Always pass depth or stencil test.
+}
+</code></pre>
+<p>3.3 混合模式</p>
+<pre><code>UnityEngine.Rendering.BlendMode
+//Blend mode for controlling the blending.
+public enum BlendMode
+{
+    Zero             = 0,   //Blend factor is (0, 0, 0, 0).
+    One              = 1,   //Blend factor is (1, 1, 1, 1).
+    DstColor         = 2,   //Blend factor is (Rd, Gd, Bd, Ad).
+    SrcColor         = 3,   //Blend factor is (Rs, Gs, Bs, As).
+    OneMinusDstColor = 4,   //Blend factor is (1 - Rd, 1 - Gd, 1 - Bd, 1 - Ad).
+    SrcAlpha         = 5,   //Blend factor is (As, As, As, As).
+    OneMinusSrcColor = 6,   //Blend factor is (1 - Rs, 1 - Gs, 1 - Bs, 1 - As).
+    DstAlpha         = 7,   //Blend factor is (Ad, Ad, Ad, Ad).
+    OneMinusDstAlpha = 8,   //Blend factor is (1 - Ad, 1 - Ad, 1 - Ad, 1 - Ad).
+    SrcAlphaSaturate = 9,   //Blend factor is (f, f, f, 1); where f = min(As, 1 - Ad).
+    OneMinusSrcAlpha = 10   //Blend factor is (1 - As, 1 - As, 1 - As, 1 - As).
+}
+</code></pre>
+<h2 id="34-有限的自定义">3.4 有限的自定义</h2>
+<p>在上面3个小小节中，我们了解了Unity自身提供的状态选项，而且每一个状态选项后都强制赋上了相应的数值，这是有原因的。因为我们写好的Shader不管怎样都要首先经过Unity的编译等处理转换为目标平台的着色器语言。而Unity自己的Shader编译器我们是没法修改(没有源码的情况)，也就是说我们不能随意更改这些状态的数值。其实我们修改的这些状态值都是给Unity的Shader编译器看的，而编译器对状态的数值是理解是固化好的。SO，虽然我们可以自定义这些状态选项，但也不会任由我们随意定义，这就好比戴着镣铐跳舞，虽然有限制，但我们依然可以跳出优美的舞蹈。<br>
+自定义非常的简单，我们可以减少选项的数量，但是不能改变每一项的值，这就要求我们强行给每一个值赋上对应的值，依然还是用深度测试实验，如下所示：<br>
+这是之前的：</p>
+<pre><code>[Enum(UnityEngine.Rendering.CompareFunction)] _ZTest (&quot;ZTest&quot;, Float) = 2
+</code></pre>
+<p>这是自定后的：</p>
+<pre><code>[Enum(Less,2,Greater,5)] _ZTest (&quot;ZTest&quot;, Float) = 2
+</code></pre>
+<p>选项与数值全部使用逗号分隔，该示例中我只给出了两个选项，小于和大于，便于直观查看。<br>
+完整Shader如下：</p>
+<pre><code>Shader &quot;ShaderCombine/03.ShaderCombineCustomState&quot;
+{
+    Properties {
+        _Color (&quot;Main Color&quot;, Color) = (1,1,1,1)
+        _MainTex (&quot;Base (RGB)&quot;, 2D) = &quot;white&quot; {}
+        [Enum(Less,2,Greater,5)] _ZTest (&quot;ZTest&quot;, Float) = 2
+    }
+    SubShader {
+        Tags { &quot;RenderType&quot;=&quot;Opaque&quot;}
+        LOD 200
+        ZTest [_ZTest]
+        CGPROGRAM
+        #pragma surface surf Lambert
+        sampler2D _MainTex;
+        fixed4 _Color;
+        struct Input {
+            float2 uv_MainTex;
+        };
+        void surf (Input IN, inout SurfaceOutput o) {
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+            o.Albedo = c.rgb;
+            o.Alpha = c.a;
+        }
+        ENDCG
+    }
+    Fallback &quot;Legacy Shaders/VertexLit&quot;
+}
+</code></pre>
+<h2 id="35-直观展示">3.5 直观展示</h2>
+<p>在Unity中的样子是这样的：<br>
+<img src="https://www.7fires.cn/post-images/1606310813022.gif" alt="" loading="lazy"></p>
+<p>细心的读者可能已经发现我们在第二章节中的完整示例中就有使用自定义，就是里面的那个写深度_ZWrite选项，因为没有在Unity里面找到相应的枚举值，就直接使用了自定义，反正只要保证数值是正确的就可以任意发挥使用。更多的使用和应用场景就等你们去发现了，我这只是抛砖引玉。</p>
+<p>以上便是MaterialPropertyDrawer的应用场景之一，对于MaterialPropertyDrawer的应用，在后续的篇章中也还会陆续出现。我计划把MaterialPropertyDrawer应用当成《合并Shader》系列中的一个分支，当然《合并Shader》系列不会仅且只有这一个分支的，O(∩_∩)O哈哈~</p>
+<p>其实最初是想花一整章篇幅来讲解MaterialPropertyDrawer的各种使用，但其内部的扩展空间还比较广泛。写下来篇幅太长，而太长的篇幅，阅读起来也比较麻烦，所以还是拆成几章篇幅来慢慢絮叨吧，同时也遵从一次只讲一个问题。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/sD0POt5V3/" class="tag">
+                    Shader
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/199/">
+                  <h3 class="post-title">
+                    【USequencer系列之二】准确显示瞬时事件和持续事件
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

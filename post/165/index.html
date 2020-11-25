@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>MaterialPropertyDrawer自定义Unity材质Inspector之关键字枚举(KeywordEnum) | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="在上一篇文章中，我们介绍了材质里面基础的枚举类型，文章在这里：MaterialPropertyDrawer自定义Unity材质Inspector之枚举类型(Enum)，这里的一般都是Unity自带的一些枚举类型，不然剔除(Cull),融合(..." />
+    <meta name="keywords" content="UnityEditor,Shader,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">MaterialPropertyDrawer自定义Unity材质Inspector之关键字枚举(KeywordEnum)</h2>
+            <div class="post-date">2016-01-11</div>
+            
+            <div class="post-content" v-pre>
+              <p>在上一篇文章中，我们介绍了材质里面基础的枚举类型，文章在这里：MaterialPropertyDrawer自定义Unity材质Inspector之枚举类型(Enum)，这里的一般都是Unity自带的一些枚举类型，不然剔除(Cull),融合(Blend)等。</p>
+<p>在这一篇文章中，我们要介绍关键字的枚举类型。</p>
+<p>在平时我们书写Shader的过程中都会定义很多的关键字来区分shader的不同用途和功能，当然Unity内置的关键字宏也很多，比如如下代码摘自Lighting.cginc</p>
+<pre><code>inline fixed4 LightingLambert (SurfaceOutput s, UnityGI gi)
+{
+	fixed4 c;
+	c = UnityLambertLight (s, gi.light);
+ 
+	#if defined(DIRLIGHTMAP_SEPARATE)
+		#ifdef LIGHTMAP_ON
+			c += UnityLambertLight (s, gi.light2);
+		#endif
+		#ifdef DYNAMICLIGHTMAP_ON
+			c += UnityLambertLight (s, gi.light3);
+		#endif
+	#endif
+ 
+	#ifdef UNITY_LIGHT_FUNCTION_APPLY_INDIRECT
+		c.rgb += s.Albedo * gi.indirect.diffuse;
+	#endif
+ 
+	return c;
+}
+</code></pre>
+<p>但这简单的几句代码里就定义了 DIRLIGHTMAP_SEPARATE，LIGHTMAP_ON，DYNAMICLIGHTMAP_ON，UNITY_LIGHT_FUNCTION_APPLY_INDIRECT 这4个关键字宏。</p>
+<p>通常定义这些编译宏的好处就是在最少的代码完成最多的功能，而这些宏是给编译器看的。</p>
+<p>对于这些宏的开启与关闭，我们最常见的就是直接在代码里面对齐进行关闭，但这样的操作往往是依赖图形工程师或技术美术的支持，普通的美工和其他人是不敢随便动的。那有没有一种方式，提供一个简单的选择界面，让普通美工或策划来控制这些宏的开启和关闭呢？</p>
+<p>答案当然是有，这就是今天的介绍内容。内容依然来自Unity的官方文档(MaterialPropertyDrawer)。ps:官方文档中有不少错误的地方，希望博友注意哦！</p>
+<h2 id="1-最简单的一种toggle-无参">1、最简单的一种:Toggle 无参</h2>
+<pre><code>//当勾选上时，定义_FANCY_ON这个宏
+[Toggle] _Fancy (&quot;Fancy?&quot;, Int) = 0
+</code></pre>
+<p>也就是当勾选这个参数时，就表示定义了_FANCY_ON这个宏，在代码中使用时#if _FANCY_ON 或 #if defined(_FANCY_ON)  或 #ifdef _FANCY_ON 结果为真。</p>
+<p>完整源码如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerKeywordEnumToggleNull&quot; {
+    Properties
+    {
+        //当勾选上时，定义_FANCY_ON这个宏
+        [Toggle] _Fancy (&quot;Fancy?&quot;, Int) = 0
+    }
+    SubShader
+    {
+        pass 
+        {
+            Tags{ &quot;LightMode&quot;=&quot;ForwardBase&quot;}
+            CGPROGRAM
+            #pragma shader_feature _FANCY_ON
+            #pragma vertex vert
+            #pragma fragment frag
+            #include &quot;UnityCG.cginc&quot;
+ 
+            struct vertOut{
+                float4 pos:SV_POSITION;
+                float4 color:COLOR;
+            };
+            vertOut vert(appdata_base v)
+            {
+                vertOut o = (vertOut)0;
+                o.pos=mul(UNITY_MATRIX_MVP,v.vertex);
+                
+                o.color=float4(1,0,0,1);//红
+                
+                #if _FANCY_ON
+                    o.color=float4(0,1,0,1);//绿
+                #endif
+                
+                return o;
+            }
+            float4 frag(vertOut i):COLOR
+            {
+                return i.color;
+            }
+            ENDCG
+		}//end pass
+	}
+}
+</code></pre>
+<h2 id="2-看上去更易理解的toggle有参">2、看上去更易理解的Toggle:有参</h2>
+<p>其实这种跟上面的那种是一样的，只是Toggle里面带有宏参数，在Toggle里面定义宏的名字，可以跟外面的不一样</p>
+<pre><code>// Will set &quot;ENABLE_FANCY&quot; shader keyword when set
+[Toggle(ENABLE_FANCY)] _Fancy (&quot;Fancy?&quot;, Float) = 0
+</code></pre>
+<p>还是上面类似的例子，源码如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerKeywordEnumToggleNull&quot; {
+	Properties {
+        [Toggle(FANCY_ON)] _Fancy (&quot;Fancy?&quot;, Int) = 0
+	}
+	SubShader {
+		pass{
+            Tags{ &quot;LightMode&quot;=&quot;ForwardBase&quot;}
+            CGPROGRAM
+            #pragma shader_feature FANCY_ON
+            #pragma vertex vert
+            #pragma fragment frag
+            #include &quot;UnityCG.cginc&quot;
+            #include &quot;Lighting.cginc&quot;
+ 
+            struct vertOut{
+                float4 color:COLOR;
+            };
+            vertOut vert(appdata_base v)
+            {
+                vertOut o = (vertOut)0;
+                
+                o.color=float4(1,0,0,1);//红
+                
+                #if FANCY_ON
+                    o.color=float4(0,1,0,1);//绿
+                #endif
+                
+                return o;
+            }
+            float4 frag(vertOut i):COLOR
+            {
+                return i.color;
+            }
+            ENDCG
+		}//end pass
+	}
+}
+</code></pre>
+<h2 id="3-更多状态的关键字定义">3、更多状态的关键字定义</h2>
+<p>在上面的示例中都只定义了一个关键字的开和关，那要定义更多状态的关键字要怎么处理呢？使用KeywordEnum</p>
+<pre><code>// Display a popup with None,Add,Multiply choices.
+// Each option will set _OVERLAY_NONE, _OVERLAY_ADD, _OVERLAY_MULTIPLY shader keywords.
+[KeywordEnum(None, Add, Multiply)] _Overlay (&quot;Overlay mode&quot;, Float) = 0
+</code></pre>
+<p>使用_Overlay一个变量来定义_OVERLAY_NONE，_OVERLAY_ADD， _OVERLAY_MULTIPLY三个关键字的互斥使用。</p>
+<p>我们的示例如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerKeywordEnum&quot; {
+    Properties {
+        [KeywordEnum(Red, Green, Blue)] _ColorMode (&quot;Color Mode&quot;, Float) = 0
+    }
+    SubShader {
+        pass{
+            Tags{ &quot;LightMode&quot;=&quot;ForwardBase&quot;}
+            CGPROGRAM
+            #pragma shader_feature _COLORMODE_RED _COLORMODE_GREEN _COLORMODE_BLUE
+            #pragma vertex vert
+            #pragma fragment frag
+            #include &quot;UnityCG.cginc&quot;
+ 
+            struct vertOut{
+                float4 pos:SV_POSITION;
+                float4 color:COLOR;
+            };
+            vertOut vert(appdata_base v)
+            {
+                vertOut o = (vertOut)0;
+                o.pos = mul(UNITY_MATRIX_MVP,v.vertex);
+                o.color = float4(0,0,0,1);
+                
+                #if _COLORMODE_RED
+                    o.color =float4(1,0,0,1);
+                
+                #elif _COLORMODE_GREEN
+                    o.color = float4(0,1,0,1);
+                
+                #elif _COLORMODE_BLUE
+                    o.color=float4(0,0,1,1);
+                #endif
+                
+                return o;
+            }
+            float4 frag(vertOut i):COLOR
+            {
+                return i.color;
+            }
+            ENDCG
+		}//end pass
+	}
+}
+</code></pre>
+<p>这样的使用，就给用户提供了一个下拉框来选择要激活哪一个关键字，如下所示：<br>
+<img src="https://www.7fires.cn/post-images/1606307866753.png" alt="" loading="lazy"><br>
+这就可以任意切换了，O(∩_∩)O哈哈~</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/sD0POt5V3/" class="tag">
+                    Shader
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/161/">
+                  <h3 class="post-title">
+                    MaterialPropertyDrawer自定义Unity材质Inspector之枚举类型(Enum)
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

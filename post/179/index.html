@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Unity Editor 10行代码搞定Hierarchy排序 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="在日常的工作和研究中，当给我们的场景摆放过多的物件的时候，Hierarchy面板就会变得杂乱不堪。比如这样：
+
+过多的层次结构充斥在里面，根层的物件毫无序列可言，整个层次面板显示非常的杂乱不堪，如果还有使用代码添加的物件，那就更加的惨不忍睹..." />
+    <meta name="keywords" content="UnityEditor,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Unity Editor 10行代码搞定Hierarchy排序</h2>
+            <div class="post-date">2016-07-09</div>
+            
+            <div class="post-content" v-pre>
+              <p>在日常的工作和研究中，当给我们的场景摆放过多的物件的时候，Hierarchy面板就会变得杂乱不堪。比如这样：<br>
+<img src="https://www.7fires.cn/post-images/1606308654741.png" alt="" loading="lazy"></p>
+<p>过多的层次结构充斥在里面，根层的物件毫无序列可言，整个层次面板显示非常的杂乱不堪，如果还有使用代码添加的物件，那就更加的惨不忍睹。里面的物件没有任何的规律可言(当然如果你们的美术有强迫症的话，也许会把物件分类，按规律排列的整齐，如果不是就惨了)。如果费时费力的排列好里面的结构，过一段时间就又会变乱。<br>
+而如果要在杂乱的层次结构中找到我们想要的物体就需要费些体力和眼神了，就如同在垃圾堆里找宝石一样。</p>
+<p>如果Hierarchy能按字母排序的话，那该多好！一个简单的字母排序，就会让整个结构看起来都是规规矩矩、整整齐齐。不论怎样也都会好过没有排序的。<br>
+比如下面这样：<br>
+<img src="https://www.7fires.cn/post-images/1606308683393.png" alt="" loading="lazy"></p>
+<p>别放弃，天无绝人之路，想让Hierarchy按字母排序，非常的简单，整个文件只有10行代码，其中using xxx占用了2行，符号占用2行，类名和函数名各1行，真正工作的代码只有4行。<br>
+代码结构就是下面这样<br>
+<img src="https://www.7fires.cn/post-images/1606308696788.png" alt="" loading="lazy"><br>
+效果就是下面这个样子<br>
+<img src="https://www.7fires.cn/post-images/1606308711391.gif" alt="" loading="lazy"></p>
+<p>哈哈，不逗你了，下面开始说正经事了！！！</p>
+<p>这是按字母升序排列</p>
+<pre><code>public class AscendingSort : BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return EditorUtility .NaturalCompare( lhs.name , rhs.name);
+    }
+}
+</code></pre>
+<p>按字母降序排列</p>
+<pre><code>public class DescendingSort : BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return 1; }
+        if (rhs == null) { return -1; }
+        return EditorUtility .NaturalCompare( rhs.name , lhs.name);
+    }
+}
+</code></pre>
+<p>按InstanceID排序</p>
+<pre><code>public class InstanceIDSort : BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return lhs .GetInstanceID(). CompareTo(rhs .GetInstanceID());
+    }
+}
+</code></pre>
+<p>按HashCode排序</p>
+<pre><code>public class HashCodeSort : BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return lhs .GetHashCode(). CompareTo(rhs .GetHashCode());
+    }
+}
+</code></pre>
+<p>InstanceID排序与HashCode排序是一样的，没有看出其中的差异。<br>
+当然除了排序，我们还可以干点其他的，比如把排序下拉框改成中文的，一样很简单，如下<br>
+如果想要你的下拉选项变成中文的，没关系一样可以搞定(以升序排列为例)，如下</p>
+<pre><code>public class 升序排列: BaseHierarchySort {
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return EditorUtility .NaturalCompare( lhs.name , rhs.name);
+    }
+}
+</code></pre>
+<p>别担心，Unity的类名是可以使用中文名的，你就大胆的使用吧。</p>
+<p>如果你不满足于只是下拉选择框是中文的，还希望上面的图标也变成中文，没关系，一样可以搞定，只需复写一下content就可以了</p>
+<pre><code>public class 升序排列 : BaseHierarchySort
+{
+    public override int Compare( GameObject lhs , GameObject rhs)
+    {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return EditorUtility .NaturalCompare( lhs.name , rhs.name);
+    }
+    public override GUIContent content {
+        get { return new GUIContent( &quot;升序&quot;); }
+    }
+}
+</code></pre>
+<p>显示图片也是没有问题的哦，给个图文混合显示的吧</p>
+<pre><code>public class AscendingSort : BaseHierarchySort {
+    private readonly GUIContent _content;
+ 
+    public AscendingSort() {
+        Texture2D image = Resources. Load&lt;Texture2D &gt;(&quot;Fire&quot;);
+        if (image ) {
+            _content = new GUIContent( &quot;升序&quot;, image , &quot;升序排列&quot;);
+        }
+        else {
+            _content = new GUIContent( &quot;升序&quot;, &quot;升序排列&quot; );
+        }
+    }
+ 
+    public override GUIContent content {
+        get { return _content; }
+    }
+    public override int Compare( GameObject lhs , GameObject rhs) {
+        if (lhs == rhs) { return 0; }
+        if (lhs == null) { return -1; }
+        if (rhs == null) { return 1; }
+        return EditorUtility .NaturalCompare( lhs.name , rhs.name);
+    }
+}
+</code></pre>
+<p>当然上面的也可以换成自定义的图片，自定义文字，自定义图片+文字，也可以给与美术进行提示等等。全部只看你返回的是一个什么样的content了，这里就不做更多的介绍了</p>
+<p>项目工程下载地址 https://github.com/sevenfires/HierarchySort.git</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/174/">
+                  <h3 class="post-title">
+                    Unity3D Shader加载时机和预编译
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

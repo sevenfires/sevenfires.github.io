@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>MaterialPropertyDrawer自定义Unity材质Inspector之枚举类型(Enum) | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="最近发现Unity的一个黑科技(其实很久以前就发现了，只是方便开头而已，哈哈)；可以自定义材质的检视面板，通过这个功能还可以把功能差不多的着色器合并成一个。
+例如有的着色器只是融合方式(Blend)、深度测试开关(ZTest)、渲染队列(R..." />
+    <meta name="keywords" content="UnityEditor,Shader,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">MaterialPropertyDrawer自定义Unity材质Inspector之枚举类型(Enum)</h2>
+            <div class="post-date">2016-01-08</div>
+            
+            <div class="post-content" v-pre>
+              <p>最近发现Unity的一个黑科技(其实很久以前就发现了，只是方便开头而已，哈哈)；可以自定义材质的检视面板，通过这个功能还可以把功能差不多的着色器合并成一个。</p>
+<p>例如有的着色器只是融合方式(Blend)、深度测试开关(ZTest)、渲染队列(RenderQueue)等等不一样，而基本的核心着色代码是一样的。这就是本文即将介绍的枚举类型(其他类型以后介绍)</p>
+<p>本文的研究来自Unity的官网文档MaterialPropertyDrawer</p>
+<h1 id="1-首先看看blendmode上的应用">1、首先看看BlendMode上的应用</h1>
+<p>Shader源码如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerBlendMode&quot; {
+	Properties {
+		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
+		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
+		[Enum(UnityEngine.Rendering.BlendMode)] _SourceBlend (&quot;Source Blend Mode&quot;, Float) = 2        
+		[Enum(UnityEngine.Rendering.BlendMode)] _DestBlend (&quot;Dest Blend Mode&quot;, Float) = 2
+	}
+	SubShader {
+		Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+		LOD 200
+		Blend [_SourceBlend] [_DestBlend]
+		
+		CGPROGRAM
+		#pragma surface surf Lambert
+		fixed4 _Color;
+		sampler2D _MainTex;
+
+		struct Input {
+			float2 uv_MainTex;
+		};
+		void surf (Input IN, inout SurfaceOutput o) {
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			o.Albedo = c.rgb;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	} 
+	FallBack &quot;Diffuse&quot;
+}
+</code></pre>
+<p>通过在属性列表中的Blend模式前添加</p>
+<pre><code>[Enum(UnityEngine.Rendering.BlendMode)]
+</code></pre>
+<p>就可以在检视面板中列举出所有的Blend模式，如图所示：<br>
+<img src="https://www.7fires.cn/post-images/1606307505271.png" alt="" loading="lazy"><br>
+列表中的具体Blend模式就不用我解释了吧。</p>
+<p>当然，某些情况下，我们并不希望列举出所有的混合模式，而只给少数的几个给美术人员使用。这一也是可以实现的，只需要我们自己来定义枚举的数值和显示就可以了。</p>
+<p>源码如下所示：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerBlendModeCustom&quot; {
+	Properties {
+		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
+		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
+		[Enum(One,1,SrcAlpha,5)] _SourceBlend (&quot;Source Blend Mode&quot;, Float) = 1
+		[Enum(One,1,SrcAlpha,5)] _DestBlend (&quot;Dest Blend Mode&quot;, Float) = 1
+	}
+	SubShader {
+		Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+		LOD 200
+		Blend [_SourceBlend] [_DestBlend]
+		
+		CGPROGRAM
+		#pragma surface surf Lambert
+		fixed4 _Color;
+		sampler2D _MainTex;
+ 
+		struct Input {
+			float2 uv_MainTex;
+		};
+		void surf (Input IN, inout SurfaceOutput o) {
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			o.Albedo = c.rgb;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	} 
+	FallBack &quot;Diffuse&quot;
+}
+</code></pre>
+<p>通过在需要枚举的类型前面添加如下代码就可以了：</p>
+<pre><code>[Enum(One,1,SrcAlpha,5)]
+</code></pre>
+<p>如图所示：<br>
+<img src="https://www.7fires.cn/post-images/1606307550866.png" alt="" loading="lazy"></p>
+<pre><code>注意：枚举中的值不能随便定义，一定要跟融合的模型一一对应上，具体可以参看BlendMode中的定义：
+</code></pre>
+<pre><code>Zero             = 0,
+One              = 1,
+DstColor         = 2,
+SrcColor         = 3,
+OneMinusDstColor = 4,
+SrcAlpha         = 5,
+OneMinusSrcColor = 6,
+DstAlpha         = 7,
+OneMinusDstAlpha = 8,
+SrcAlphaSaturate = 9,
+OneMinusSrcAlpha = 10
+</code></pre>
+<p>#2、在来看看在其他属性设置上的使用<br>
+因为在其他属性上的设置都类似于BlendMode的设置，这里就不单独举例某一个，就直接列出所有的吧，然后自己在里面查找自己需要的属性，完整版源码如下：</p>
+<pre><code>Shader &quot;MaterialPropertyDrawer/MaterialPropertyDrawerEnum&quot; {
+	Properties {
+		_Color (&quot;Color&quot;, Color) = (1,1,1,1)
+		_MainTex (&quot;Albedo (RGB)&quot;, 2D) = &quot;white&quot; {}
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull (&quot;Cull Mode&quot;, Float) = 1
+        [Enum(Off,0,On,1)] _ZWrite (&quot;ZWrite&quot;, Float) = 1
+        [Enum(Less,0, Greater,1, LEqual,2, GEqual,3, Equal,4, NotEqual,5, Always,6)] _ZTest (&quot;ZTest&quot;, Float) = 1
+		[Enum(UnityEngine.Rendering.BlendMode)] _SourceBlend (&quot;Source Blend Mode&quot;, Float) = 2        
+		[Enum(UnityEngine.Rendering.BlendMode)] _DestBlend (&quot;Dest Blend Mode&quot;, Float) = 2
+        _CutOff (&quot;Cut Off&quot;, float) = 0.5
+	}
+	SubShader {
+		Tags { &quot;RenderType&quot;=&quot;Opaque&quot; }
+		LOD 200
+        Cull [_Cull]
+        ZWrite [_ZWrite]
+        ZTest [_ZTest]
+        Fog{
+            Mode Global
+        }
+        AlphaTest Less [_CutOff]
+		Blend [_SourceBlend] [_DestBlend]
+		
+		CGPROGRAM
+		#pragma surface surf Lambert
+		fixed4 _Color;
+		sampler2D _MainTex;
+ 
+		struct Input {
+			float2 uv_MainTex;
+		};
+		void surf (Input IN, inout SurfaceOutput o) {
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			o.Albedo = c.rgb;
+			o.Alpha = c.a;
+		}
+		ENDCG
+	} 
+	FallBack &quot;Diffuse&quot;
+}
+</code></pre>
+<p>暂时就先列举这么多吧，剩下没有列举的可以根据规则自己扩展。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/sD0POt5V3/" class="tag">
+                    Shader
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/155/">
+                  <h3 class="post-title">
+                    删除Prefab或场景物件有脚本缺失的组件
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

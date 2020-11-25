@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>【USequencer系列之二】准确显示瞬时事件和持续事件 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="这是USequencer系列的第二篇，距离上一篇已经一个月了。在上一篇博文中，我们简单介绍了USequencer的一些基本功能和特性，同时也说到了USequencer的很多不足之处：一些边角的东西做得不是特别好。不过好在修改这些小功能都是很..." />
+    <meta name="keywords" content="Sequencer,剧情,USequencer,UnityEditor,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">【USequencer系列之二】准确显示瞬时事件和持续事件</h2>
+            <div class="post-date">2016-09-30</div>
+            
+            <div class="post-content" v-pre>
+              <p>这是USequencer系列的第二篇，距离上一篇已经一个月了。在上一篇博文中，我们简单介绍了USequencer的一些基本功能和特性，同时也说到了USequencer的很多不足之处：一些边角的东西做得不是特别好。不过好在修改这些小功能都是很简单很方便的，毕竟有USequencer强大的结构支撑着，任何的小修改和优化都是那样的简单和实用。<br>
+在上一篇中有提到过USequencer的事件几乎是一个万能的东西，只要你需要，没有用他完成不了的。这篇先不介绍那些用他完成不可思议的东西，先解决一下瞬时和持续事件的显示方式，让他准确的传达出每个事件的真实意图。</p>
+<h1 id="准确显示瞬时和持续事件">准确显示瞬时和持续事件</h1>
+<p>为了方便我们测试，我创建了两个事件，分别是一个瞬时事件和一个持续事件，里面不包含任何的逻辑，只是用他来测试默认情况的下的事件显示问题(具体的创建可以参考官方文档)。<br>
+代码如下：</p>
+<pre><code>[USequencerFriendlyName(&quot;瞬时事件&quot;)]
+[USequencerEvent(&quot;Custom/Instant Event 瞬时事件&quot;)]
+[USequencerEventHideDuration()]
+public class SFInstantEvent : USEventBase {
+    public override void FireEvent() {
+ 
+    }
+ 
+    public override void ProcessEvent(float runningTime) {
+ 
+    }
+}
+</code></pre>
+<pre><code>[USequencerFriendlyName(&quot;持续事件&quot;)]
+[USequencerEvent(&quot;Custom/Continue Event 持续事件&quot;)]
+public class SFContinueEvent : USEventBase {
+    public override void FireEvent() {
+ 
+    }
+ 
+    public override void ProcessEvent(float runningTime) {
+ 
+    }
+}
+</code></pre>
+<p>这两个事件在编辑面板下的显示如下：<br>
+<img src="https://www.7fires.cn/post-images/1606309610092.png" alt="" loading="lazy"></p>
+<p>在事件展开模式下，这个两个事件的显示长度一样，如果不是上面的文字，根本区分不出这两个事件哪个是瞬时事件，哪个是持续事件。<br>
+<img src="https://www.7fires.cn/post-images/1606310156953.png" alt="" loading="lazy"></p>
+<p>在事件折叠模式下，这两个事件又都统一的显示为一个小竖条，真的是傻傻分不清楚。<br>
+这样的一种显示模式，通常会误导美术，难以区分瞬时和持续事件，编辑时多多少少会受影响。下面我们就来看看怎么修正这个问题，让USequencer准确显示瞬时事件和持续事件。</p>
+<h1 id="一-展开模式expand">一、展开模式Expand</h1>
+<h2 id="11-修改所有事件的默认长度">1.1、修改所有事件的默认长度</h2>
+<p>通过分析USequencer的源码，发现每个事件的默认显示模式都由USEventBaseEditor.cs这个脚本来控制，通过修改里面的方法DrawEventInTimeline可以修改每个事件的默认长度，修改代码如下：<br>
+USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309665859.png" alt="" loading="lazy"></p>
+<p>修改后的显示结果<br>
+<img src="https://www.7fires.cn/post-images/1606309679137.png" alt="" loading="lazy"></p>
+<p>事件已经如我们的预期的方式显示了：瞬时事件为一个竖条，持续事件为一个矩形区域。同时也发现瞬时事件的标签没有显示出来，我们继续探索研究。</p>
+<h2 id="12-修改该模式下的默认标签长度">1.2、修改该模式下的默认标签长度</h2>
+<p>在上一个方法的结束位置，调用了RenderEvent来具体的绘制每个事件，在RenderEvent这个方法里负责具体绘制事件的背景区块和相应的标签。在默认情况下标签的显示区域就是上面给的renderingArea，瞬时事件瞬间就尴尬了。<br>
+没事我们来修改相应的代码，把背景区块的Area与标签的Area区分开，标签的区域允许超过背景块的区域，不然持续时间很短的持续时间的标签也会显示不完整(提示只能看到一半，很让人抓狂，不做吊胃口的事)。具体的修改如下所示：<br>
+USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309707438.png" alt="" loading="lazy"><br>
+修改后的显示结果：<br>
+<img src="https://www.7fires.cn/post-images/1606309747469.png" alt="" loading="lazy"></p>
+<p>原先的持续事件标签超过背景区域：<br>
+<img src="https://www.7fires.cn/post-images/1606310206349.png" alt="" loading="lazy"></p>
+<p>修改后的显示：<br>
+<img src="https://www.7fires.cn/post-images/1606309768854.png" alt="" loading="lazy"></p>
+<p>通过以上修改，其实也就7行代码，就可以让瞬时事件和持续事件在Expand模式下一眼区分开，何乐而不为呢！</p>
+<h1 id="二-折叠模式hide">二、折叠模式Hide</h1>
+<p>修改完展开模式下的显示，是不是折叠模式下也能正常显示了呢？现实有点残酷，然而并不如我们想的那样：瞬时和持续事件还是只是一个小竖条，如下所示：<br>
+<img src="https://www.7fires.cn/post-images/1606310233736.png" alt="" loading="lazy"></p>
+<h2 id="21-修改默认的宽度和计算持续事件的宽度">2.1、修改默认的宽度和计算持续事件的宽度</h2>
+<p>依然还是在 USEventBaseEditor.cs这个脚本里面，通过分析和测试，折叠模式下的显示走的是另外一个方法DrawCollapsedEventInTimeline来绘制折叠模式下的事件，通过对比展开模式(DrawEventInTimeline)的相关逻辑，做出了如下的修改：<br>
+USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309822819.png" alt="" loading="lazy"></p>
+<p>默认宽度还是4，如果是持续事件的话，重新计算宽度。修改后的显示结果如下：<br>
+<img src="https://www.7fires.cn/post-images/1606309837207.png" alt="" loading="lazy"></p>
+<p>已经能准确的显示瞬时事件和持续事件，但是你以为这样就结束了吗？然而并没有，你会发现这样的修改后，鼠标在点选持续事件的时候，很难点中，只有点击持续事件开始的那小块区域才能选中事件，这不是坑爹么？使用起来多么不方便，我们继续修改。请继续往下看~~~</p>
+<h2 id="22-修改折叠模式下的点选准确性">2.2、修改折叠模式下的点选准确性</h2>
+<p>在上面的问题中其实就已经暗含了造成持续事件点选不中的根本原因是事件命中区域与显示区域的不一样造成的。而在展开模式下完全没有这个问题，通过对比USEventBaseEditor.cs下的DrawEventInTimeline与DrawCollapsedEventInTimeline方法可以发现一些奇妙和不一样的地方。当然还有同一个脚本里的RenderEvent与RenderCollapsedEvent，以及EventEditor.cs下的OnGUI和OnCollapsedGUI。<br>
+对，折叠模式下的这两个方法没有返回值，而这个返回值确实决定了每个事件的点选区域。我对他的修改的内容如下：<br>
+USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309873303.png" alt="" loading="lazy"></p>
+<p>USEventBaseEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309887681.png" alt="" loading="lazy"></p>
+<p>EventEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309899299.png" alt="" loading="lazy"></p>
+<p>修改后的显示和点选结果，以及能够正常点选了：<br>
+<img src="https://www.7fires.cn/post-images/1606309913205.png" alt="" loading="lazy"></p>
+<h1 id="三-持续事件的默认时间">三、持续事件的默认时间</h1>
+<p>上面的方法已经解决了瞬时和持续事件的准确显示问题，但当我们新建持续事件时，默认持续时间竟然是-1s。<br>
+<img src="https://www.7fires.cn/post-images/1606309932343.png" alt="" loading="lazy"></p>
+<p>这~~~这不科学，虽然瞬时事件其实就是一个持续时间为-1s的事件，但是你也不能把持续事件的默认时间也设置为-1s呀，不然我们上面的修改会把这个持续事件默认显示为一个一个小竖条的瞬时事件，这岂不是又在误导美术么，没办法就继续修改吧，谁叫咋有源码。<br>
+跟踪和分析了下源码，定位在创建事件的时候，我们只要在创建的时候区分开瞬时事件和持续事件，把持续事件的持续时间设置为一个默认的持续时间(不要小于0就可以了)，我们的修改如下所示：<br>
+EventEditor<br>
+<img src="https://www.7fires.cn/post-images/1606309950590.png" alt="" loading="lazy"></p>
+<p>代码：</p>
+<pre><code>var customAttributes = type.GetCustomAttributes(true).Where(attr =&gt; attr is USequencerEventHideDurationAttribute).Cast&lt;USequencerEventHideDurationAttribute&gt;().ToArray();
+if (customAttributes.Length == 0)
+    eventComponent.Duration = 1;
+</code></pre>
+<p>界面显示如下：<br>
+<img src="https://www.7fires.cn/post-images/1606309975652.png" alt="" loading="lazy"></p>
+<p>以上就可以让USequencer准确的创建和显示我们的瞬时和持续事件。细心的朋友是否已经发现，通过我们的修改USEventBaseEditor.cs下的DrawEventInTimeline与DrawCollapsedEventInTimeline和RenderEvent与RenderCollapsedEvent，以及EventEditor.cs下的OnGUI和OnCollapsedGUI他们之间已经没有太多差距，可以对他们进行合并，简化逻辑，这里就不详细介绍了。<br>
+还有时间，塞几个小修改，废话不多说，都在代码里：</p>
+<h2 id="1-折叠模式下的高度">1、折叠模式下的高度</h2>
+<figure data-type="image" tabindex="1"><img src="https://www.7fires.cn/post-images/1606310015950.png" alt="" loading="lazy"></figure>
+<p>EventEditor<br>
+<img src="https://www.7fires.cn/post-images/1606310025777.png" alt="" loading="lazy"></p>
+<p>USEventTimelineHierarchyItem<br>
+<img src="https://www.7fires.cn/post-images/1606310036662.png" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606310045950.png" alt="" loading="lazy"></p>
+<h2 id="2-修改字体大小">2、修改字体大小</h2>
+<figure data-type="image" tabindex="2"><img src="https://www.7fires.cn/post-images/1606310058494.png" alt="" loading="lazy"></figure>
+<p>路径：Assets/WellFired/usequencer/Uncompiled/Editor/Resources/USequencerProSkin.guiskin<br>
+<img src="https://www.7fires.cn/post-images/1606310066487.png" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="3"><img src="https://www.7fires.cn/post-images/1606310076260.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://www.7fires.cn/post-images/1606310082992.png" alt="" loading="lazy"></figure>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/Zst5GVmKN/" class="tag">
+                    Sequencer
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/_IEhCi0U7a/" class="tag">
+                    剧情
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/BdyO28Upxo/" class="tag">
+                    USequencer
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/186/">
+                  <h3 class="post-title">
+                    [USequencer系列之一]初识USequencer
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Unity3D Shader加载时机和预编译 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="一、Shader与Shader Variants
+着色器(Shader)是在GPU上执行的小程序，通常情况下，我们自己写的一个着色器文件(xxx.shader)对应一个着色器变体，对应一个GPU程序。但如果着色器中引入了关键字(Keywor..." />
+    <meta name="keywords" content="Shader,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Unity3D Shader加载时机和预编译</h2>
+            <div class="post-date">2016-07-06</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="一-shader与shader-variants">一、Shader与Shader Variants</h1>
+<p>着色器(Shader)是在GPU上执行的小程序，通常情况下，我们自己写的一个着色器文件(xxx.shader)对应一个着色器变体，对应一个GPU程序。但如果着色器中引入了关键字(Keyword)或者可变的RenderSetup等技术，那么一个着色器文件就可能对应N个着色器变体，对应N个GPU程序。</p>
+<p>怎样理解这里面的对应关系呢？可以这样简单的认为，着色器文件:着色器变体:GPU Program=1:N:N</p>
+<p>查看一个着色器对应几个变体的方法：</p>
+<h2 id="11-点击着色器文件在inspector面板中查看">1.1、点击着色器文件在Inspector面板中查看</h2>
+<p><img src="https://www.7fires.cn/post-images/1606308036011.png" alt="" loading="lazy"><br>
+就这样一个普通的新建的SurfaceShader就有569个变体，全编译会生成569个GPU程序</p>
+<h2 id="12-在shadervaruantscollection中查看">1.2、在ShaderVaruantsCollection中查看</h2>
+<p><img src="https://www.7fires.cn/post-images/1606308071933.png" alt="" loading="lazy"><br>
+在这里显示有356+4=360个变体，少了9个,原因嘛就要问Unity官方了，或者你也可以在留言中告诉我</p>
+<h1 id="二-加载和编译">二、加载和编译</h1>
+<p>加载和编译着色器需要一点点时间。通常加载单个独立的GPU程序不需要多少时间，但是就如上面所说，着色器有时会有很多的着色器变体。<br>
+比如Unity 5.x的Standerd Shader，如果完全编译的话，会有几万个不同的GPU程序(后面会有图示)，而这会引发两个问题：</p>
+<ol>
+<li>大量的着色器变体会增加游戏打包时间，会让游戏的总包体积变大；</li>
+<li>加载大量的着色器变体会很慢，并且消耗大量的内存。<br>
+当然这两个问题都是我们不愿意看到了，怎么解决呢？继续往下看。</li>
+</ol>
+<h1 id="三-剔除多余着色器变体">三、剔除多余着色器变体</h1>
+<h2 id="31-在生成时剔除多余着色器变体">3.1、在生成时剔除多余着色器变体</h2>
+<p>在生成游戏包时，Unity可以检测如果某些内置的着色器变体没有被使用到，就不会把他们打到游戏包中，这个方法可适用于以下几种情况：</p>
+<ol>
+<li>个别着色器特性，比如使用 #pragma shader_feature的着色器，如果没有材质使用到了这个特性，那么就不会把它打包进去；</li>
+<li>没有被任何场景使用到的雾效(Fog)或光照贴图模式(Lightmap)的着色器变体，也不会打包进去。<br>
+通过以上两种方式的结合可以大大减少着色器变体的数量。比如Standard着色器有35254中变体，如果完全编译的话，就会占用有几百兆存储，但是一般的工程用到的只会有几兆，而且打包时会进一步压缩。</li>
+</ol>
+<h2 id="32-在加载时剔除多余着色器变体">3.2、在加载时剔除多余着色器变体</h2>
+<h3 id="1unity-shader的默认加载行为">1)Unity Shader的默认加载行为</h3>
+<p>在默认设置中，Unity加载着色器文件到内存中，但内部使用的着色器变体(GPUProgram)直到真正使用的时候才会创建(这里要区分4.x和5.x，后面解释)。这也就是说，打进游戏包中的着色器变体只是可能被用到，但是在用到之前是不消耗加载时间和占用内存的。<br>
+比如，着色器常常有一个处理点光源阴影的变体，但是如果游戏中从来没有使用过点光源阴影，那么就不会加载这个相应的变体。<br>
+当然这个默认的行为就会造成一些变体在第一次被用到的时候会出现卡顿(因为需要加载一个新的GPU程序代码到图形驱动中)，这是不能接受的，因此Unity提供了另一个方案来解决这个问题。</p>
+<p>PS:shader加载造成的卡顿有两种情况：<br>
+i、着色器变种已经打包到APP中，只需要加载该变体，创建GPUProgram就可以了<br>
+<img src="https://www.7fires.cn/post-images/1606308170059.png" alt="" loading="lazy"></p>
+<p>ii、着色器变种没用被打包，这时需要shaderlab文件进行解析和编译相应的变种，然后创建GUPProgram<br>
+<img src="https://www.7fires.cn/post-images/1606308184485.png" alt="" loading="lazy"></p>
+<p>以上两种情况都是实际中遇到过的，但后一种使用目前的项目工程难以重现，所以图片来自网络，只作参考。等有时间了在单独创建测试工程来重现这两种情况。</p>
+<h3 id="2使用着色器变体群shadervariantcollection">2)使用着色器变体群(ShaderVariantCollection)</h3>
+<p>ShaderVariantCollection是Unity在5.x后提供的一个着色器预编译的方案，使用它可以轻松的指定需要着色器变体，在需要的时候加载、解析、编译等一条龙服务。<br>
+ShaderVariantCollection其实就是一个着色器资源列表，是一个由通道类型+着色器关键字组合的列表。如下图<br>
+<img src="https://www.7fires.cn/post-images/1606308208282.png" alt="" loading="lazy"></p>
+<p>添加着色器窗口<br>
+<img src="https://www.7fires.cn/post-images/1606308223747.png" alt="" loading="lazy"></p>
+<p>添加着色器变体就是如下一个关键字选择器<br>
+<img src="https://www.7fires.cn/post-images/1606308238997.png" alt="" loading="lazy"></p>
+<h1 id="四-创建shadervariantcollection">四、创建ShaderVariantCollection</h1>
+<h2 id="41-全手工创建">4.1、全手工创建</h2>
+<p>这是最笨的一种方法，需要自己在Project视图下创建ShaderVariantCollection资源，然后使用上面介绍的两个窗口自己添加着色器变体<br>
+<img src="https://www.7fires.cn/post-images/1606308263424.png" alt="" loading="lazy"></p>
+<h2 id="42-使用unity收集当前使用到的着色器变体">4.2、使用Unity收集当前使用到的着色器变体</h2>
+<p>为了最快速、最方便的帮助我们创建和收集那些真正被用到的着色器和他们的变体，Unity已经在编辑器中内置了可以追踪那些已经被使用到的着色器和他们的变体，并可以直接生成相应的ShaderVariantCollection资源。<br>
+打开图形设置面板(Edit-&gt;Project Settings-&gt;Graphics)<br>
+<img src="https://www.7fires.cn/post-images/1606308283346.png" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="1"><img src="https://www.7fires.cn/post-images/1606308290501.png" alt="" loading="lazy"></figure>
+<p>这时候只需要依次打开我们的所有场景，把需要的物体都显示一遍，Unity就会自动记录下来哪些着色器的哪些着色器变体已经被使用到。统计完后只需点击下面的保存按钮就可以生成我们所需要的ShaderVariantCollection资源。当然你也可以为你的每一个场景或者按需生成足够多的ShaderVariantCollection资源。</p>
+<h1 id="五-使用shadervariantcollection">五、使用ShaderVariantCollection</h1>
+<h2 id="51-启动时加载">5.1、启动时加载</h2>
+<p>最简单最粗暴的使用方式就是在游戏启动的瞬间就直接加载ShaderVariantCollection资源并编译里面的着色器变体，Unity已经为我们做好这一步了，依然还是在图形设置面板里，只需把需要启动是就编译的ShaderVariantCollection添加在Preloaded Shaders里面，如下图所示：<br>
+<img src="https://www.7fires.cn/post-images/1606308319690.png" alt="" loading="lazy"></p>
+<h2 id="52-使用代码加载">5.2、使用代码加载</h2>
+<p>由于ShaderVariantCollection也是一种资源，可以跟纹理、模型等等资源一起打包和加载等，只需在加载之后调用一句WarmUp，如下：</p>
+<pre><code>ShaderVariantCollection shaderVariantCollection = Resources.Load &lt;ShaderVariantCollection&gt;( &quot;MainShaderVariant&quot;);
+if (shaderVariantCollection )
+      shaderVariantCollection.WarmUp ();
+</code></pre>
+<h1 id="六-一些后话">六、一些后话</h1>
+<p>目前来说，对于shader的预编译有两种：<br>
+ShaderVariantCollection::WarmUp和Shader::WarmupAllShaders<br>
+该怎么选择呢？</p>
+<p>1、如果你是Unity4.x，就大胆的使用Shader::WarmupAllShaders吧，因为没得选<br>
+2、如果你是Unity5.x<br>
+i、没有使用5.x新的shader(Standard和StandardSpecular)，自定义shader也没有使用大量关键字等还是可以使用Shader::WarmupAllShaders<br>
+ii、使用了5.x新的shader，自定义shader也使用有大量关键字的话，你可以考虑使用ShaderVariantCollection::WarmUp了<br>
+iii、还有一些很特殊的情况，就看情况而论了</p>
+<p>Unity4.x和5.x对于shader编译上的一些差异：<br>
+在Unity4.x中，只要把shader加载进内存后就会自动的编译该shader，而在Unity5.x中，加载就仅仅只是加载了，如果还需要编译的话，需要游戏中实际使用到或者主动使用shader.WarmupAllShaders又或者ShaderVariantCollection.WarmUp来编译shader。</p>
+<p>至于原因嘛，大概是在Unity5.0以前，每一种shader都比较独立，单个shader对应的变种并不多，所以5.0以前的shader的文件数量会比较多；但是到了5.0以后，引入Standard和StandardSpecular这两个shader后，由于这两个着色器的变种实在太多(Standard有35254个变种，StandardSpecular有32950个变种)，如果这两个着色器全编译，后果就是内存一下少了几百兆(当然这是官方的说法，实际测试貌似不是这样的)。</p>
+<p>如果文中有错误的地方，欢迎指出和留言，如果你有不同的见解，也可以留言告诉我。</p>
+<p>参考资料：<br>
+http://docs.unity3d.com/Manual/OptimizingShaderLoadTime.html</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/sD0POt5V3/" class="tag">
+                    Shader
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/165/">
+                  <h3 class="post-title">
+                    MaterialPropertyDrawer自定义Unity材质Inspector之关键字枚举(KeywordEnum)
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

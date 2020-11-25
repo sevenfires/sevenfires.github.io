@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>[USequencer系列之三]缤纷事件、事件间吸附 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="一晃眼，两个月就过去，繁忙的两个月，好在结果是丰满喜悦的，收获也是满满的。
+在上一篇博文中，我们修改源码，让剧情编辑器准确的显示瞬时事件和持续事件，便于用户一眼辨别。在这一篇中我们再接再厉，继续修改事件相关的源码，使之更加友好易用。
+一、五..." />
+    <meta name="keywords" content="Sequencer,剧情,USequencer,UnityEditor,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">[USequencer系列之三]缤纷事件、事件间吸附</h2>
+            <div class="post-date">2017-02-16</div>
+            
+            <div class="post-content" v-pre>
+              <p>一晃眼，两个月就过去，繁忙的两个月，好在结果是丰满喜悦的，收获也是满满的。<br>
+在上一篇博文中，我们修改源码，让剧情编辑器准确的显示瞬时事件和持续事件，便于用户一眼辨别。在这一篇中我们再接再厉，继续修改事件相关的源码，使之更加友好易用。</p>
+<h1 id="一-五彩缤纷的事件">一、五彩缤纷的事件</h1>
+<p>对于USequencer编辑器，用过的人都知道，在默认的设置下，所有事件都是统一的浅灰色，不论是瞬时事件，还是持续事件，而背景是纯黑色，这样不仅不便于查看，也不容易区分不同的事件，还容易伤眼睛，让人看着沉重和困乏。<br>
+如下所示：<br>
+<img src="https://www.7fires.cn/post-images/1606310919593.png" alt="" loading="lazy"><br>
+而如果剧情已经做到后期，事件数量堆叠起来后，同一个界面里可能充斥着数十种不同事件不同排列组合。事件之间互相交叠，你中有我，我中有你。而到这个时候，如果单通过事件的名字来区分、查找和修改事件就显得有些困难了，同样的持续事件时间长度也难以一眼明了。  面对一堆外形都差不多的事件，挑选出特定事件，这不就是现实版的大家来找茬么~~~<br>
+如果，假设每一类事件都有一个自己的专属颜色，而这个颜色恰巧又可以让用户自己配置，那通过颜色就可以很容易的区分不同事件，查找起来也会非常的方便。并且用户还可以给自己常用的事件配置上自己喜欢的颜色，岂不美哉~~~<br>
+铺垫已够，下面说正事，其实代码就几行而已，如下所示：<br>
+USEventBaseEditor.cs<br>
+<img src="https://www.7fires.cn/post-images/1606310942870.png" alt="" loading="lazy"></p>
+<p>逻辑也很简单：</p>
+<p>1、获取当前事件的名字<br>
+2、在USeqSkin主题配置里查找相应的风格配置<br>
+2.1、如果没找到，就使用默认的风格(用户太懒，不想配置就用默认的吧)<br>
+3、使用该风格绘制事件的背景色<br>
+3.1、连默认的都没有，那还是继续灰色吧(程序猿太懒~)<br>
+下面是USeqSkin的配置方法：<br>
+USeqSkin配置文件路径：<br>
+付费版：<br>
+Assets/WellFired/usequencer/Uncompiled/Editor/Resources/USequencerProSkin.guiskin<br>
+免费版：<br>
+Assets/WellFired/usequencer/Uncompiled/Editor/ResourcesUSequencerFreeSkin.guiskin<br>
+ps:这个GUI主题设置，不仅可以设置每个事件的名字(我们自己扩展的)，也可以配置USequencer的编辑器面板界面，具体的就自己配置着玩吧，这里不细说<br>
+点击后，在Inspector的显示是下面这个样子的：<br>
+<img src="https://www.7fires.cn/post-images/1606310973883.png" alt="" loading="lazy"><br>
+通过修改Size的数据来增删各项主题风格。<br>
+展开每项主题风格标签，其中在Normal标签下的Background就是我们需要修改的背景颜色图片，用自己喜欢的颜色图片替换原来的就搞定了。当然也可以换成自己喜欢的背景图，什么猫呀、狗呀等等都可以，不受限制。<br>
+ps:因为要应对各种不同的事件长度，图片会被任意比例的拉扯，所以还是纯色图片比较好用<br>
+下面是测试用例里定义的几种风格，我们只修改的相应的背景色，其他的选项可以自己研究，会很好的玩的哦~<br>
+<img src="https://www.7fires.cn/post-images/1606310987668.png" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606311005448.png" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606311011455.png" alt="" loading="lazy"></p>
+<p>这是修改后的剧情编辑界面：<br>
+<img src="https://www.7fires.cn/post-images/1606311086241.png" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606311091098.png" alt="" loading="lazy"><br>
+怎么样，是不是比起老的灰色要好看、易看和好看！！！<br>
+记住，如果你的配色不能让用户感到满意的话，可以让美术人员来帮你配色，毕竟这个是可以自定义的，里面的字体颜色也是可以修改的！合理的配色会让人赏心悦目，看起来像艺术品；糟糕的配色会让整个编辑器看起来像一个大染缸。<br>
+快来让你的美术给你的编辑器搭配上好看的颜色吧。<br>
+ps:为大家准备的部分的色块，供大家使用：https://github.com/sevenfires/USequencerStudy.git<br>
+<img src="https://www.7fires.cn/post-images/1606311110027.png" alt="" loading="lazy"></p>
+<h1 id="二-事件吸附功能">二、事件吸附功能</h1>
+<p>在剧情编辑过程中，美术常常需要拖动事件，而有的事件又要求一个接一个的播放，事件首尾相接(特指持续事件)。最初，美术可能会靠界面拖拽来对其事件，但这总难以对准；然后高要求的美术可能会自己拿计算器在那里计算每个事件的起始时间、持续时间、结束时间（带小数点后好几位），然后直接填到事件里（ps:我们的剧情美术早期就是这么干的，那个时候优先实现游戏功能，编辑器的易用改造排在后面；惭愧，感觉有点对不起美术）；当然最后有了事件吸附功能，美术就轻松多了，我也没那么惭愧了，O(∩_∩)O哈哈~<br>
+逻辑也不复杂，如下所示：<br>
+EventEditor.cs<br>
+<img src="https://www.7fires.cn/post-images/1606311127450.png" alt="" loading="lazy"><br>
+详细文本源码如下：</p>
+<pre><code>private float Sorption(USEventBase destEventBase, float newTime)
+{
+    float destFireTime = newTime;
+    USEventBase[] eventBases = destEventBase.Timeline.GetComponentsInChildren&lt;USEventBase&gt;();
+    foreach (var eventBase in eventBases)
+    {
+        if (eventBase == destEventBase) continue;
+        if (eventBase.Duration &lt;= 0) continue;
+ 
+        float interval = Mathf.Abs(eventBase.FireTime + eventBase.Duration - newTime);
+        if (interval &lt; 0.3f)
+        {
+            destFireTime = eventBase.FireTime + eventBase.Duration;
+            continue;
+        }
+        interval = Mathf.Abs(newTime + destEventBase.Duration - eventBase.FireTime);
+        if (interval &lt; 0.3f)
+        {
+            destFireTime = eventBase.FireTime - destEventBase.Duration;
+            continue;
+        }
+    }
+    return destFireTime;
+}
+</code></pre>
+<p>效果图：<br>
+<img src="https://www.7fires.cn/post-images/1606311157829.gif" alt="" loading="lazy"><br>
+<img src="https://www.7fires.cn/post-images/1606311162804.gif" alt="" loading="lazy"></p>
+<p>ps：便于测试，拖拽时间隔低于0.3S就会自动吸附，实际中给0.1S左右就够用了；还有如果需要间隔的间隔小于吸附值，可以手动修改事件在Inspector中的Fire值达到想要的数值。<br>
+这期就先这么多，不好意思，废话有点多，还请见谅……</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/Zst5GVmKN/" class="tag">
+                    Sequencer
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/_IEhCi0U7a/" class="tag">
+                    剧情
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/BdyO28Upxo/" class="tag">
+                    USequencer
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/203/">
+                  <h3 class="post-title">
+                    【合并Shader】合并渲染状态
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

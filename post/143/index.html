@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>UnityEditor中Selection类的解析和使用 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="在给Unity的项目书写小工具的时候，我们常常会使用到Selection类来快速获取策划或美术所选择的物体，比如：获取当前选定的单个物体、多个物体或者Transform等等……
+那么今天我们就来讨论下这个Selection类具体有哪些用法，..." />
+    <meta name="keywords" content="UnityEditor,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">UnityEditor中Selection类的解析和使用</h2>
+            <div class="post-date">2015-11-11</div>
+            
+            <div class="post-content" v-pre>
+              <p>在给Unity的项目书写小工具的时候，我们常常会使用到Selection类来快速获取策划或美术所选择的物体，比如：获取当前选定的单个物体、多个物体或者Transform等等……</p>
+<p>那么今天我们就来讨论下这个Selection类具体有哪些用法，已经还有多少黑科技隐藏在里面。</p>
+<p>首先，我们来看看这个类里面都有哪些函数功能</p>
+<pre><code>#region 程序集 UnityEditor.dll, v0.0.0.0
+// ……\Library\UnityAssemblies\UnityEditor.dll
+#endregion
+ 
+using System;
+using UnityEngine;
+ 
+namespace UnityEditor
+{
+    // 摘要: 
+    //     Access to the selection in the editor.
+    public sealed class Selection
+    {
+        public Selection();
+ 
+        // 摘要: 
+        //     Returns the active game object. (The one shown in the inspector).
+        public static GameObject activeGameObject { get; set; }
+        //
+        // 摘要: 
+        //     Returns the instanceID of the actual object selection. Includes prefabs,
+        //     non-modifyable objects.
+        public static int activeInstanceID { get; set; }
+        //
+        // 摘要: 
+        //     Returns the actual object selection. Includes prefabs, non-modifyable objects.
+        public static UnityEngine.Object activeObject { get; set; }
+        //
+        // 摘要: 
+        //     Returns the active transform. (The one shown in the inspector).
+        public static Transform activeTransform { get; set; }
+        //
+        // 摘要: 
+        //     Returns the guids of the selected assets.
+        public static string[] assetGUIDs { get; }
+        //
+        // 摘要: 
+        //     Returns the actual game object selection. Includes prefabs, non-modifyable
+        //     objects.
+        public static GameObject[] gameObjects { get; }
+        //
+        // 摘要: 
+        //     The actual unfiltered selection from the Scene returned as instance ids instead
+        //     of objects.
+        public static int[] instanceIDs { get; set; }
+        //
+        // 摘要: 
+        //     The actual unfiltered selection from the Scene.
+        public static UnityEngine.Object[] objects { get; set; }
+        //
+        // 摘要: 
+        //     Returns the top level selection, excluding prefabs.
+        public static Transform[] transforms { get; }
+ 
+        // 摘要: 
+        //     Returns whether an object is contained in the current selection.
+        public static bool Contains(int instanceID);
+        //
+        // 摘要: 
+        //     Returns whether an object is contained in the current selection.
+        public static bool Contains(UnityEngine.Object obj);
+        //
+        // 摘要: 
+        //     Returns the current selection filtered by type and mode.
+        public static UnityEngine.Object[] GetFiltered(Type type, SelectionMode mode);
+        //
+        // 摘要: 
+        //     Allows for fine grained control of the selection type using the SelectionMode
+        //     bitmask.
+        public static Transform[] GetTransforms(SelectionMode mode);
+    }
+}
+</code></pre>
+<p>下面我们来逐一讲解下：</p>
+<h2 id="1-构造函数">1、构造函数</h2>
+<pre><code>public Selection();
+</code></pre>
+<p>这个没啥好说的，跳过</p>
+<h2 id="2-属性">2、属性</h2>
+<pre><code>public static GameObject            activeGameObject    { get; set; }    //返回Inspector中正显示的GameObject(Hierarchy、Project)
+public static int                   activeInstanceID    { get; set; }    //返回当前物体的InstanceID(Hierarchy、Project)
+public static UnityEngine.Object    activeObject        { get; set; }    //返回选择的激活物体(Hierarchy、Project)
+public static Transform             activeTransform     { get; set; }    //返回选择的激活变换(Hierarchy)
+public static string[]              assetGUIDs          { get; }         //返回选择资源的GUID(Project)
+public static GameObject[]          gameObjects         { get; }         //返回选择的激活物体(Hierarchy、Project)
+public static int[]                 instanceIDs         { get; set; }    //返回当前物体的InstanceID(Hierarchy、Project)
+public static UnityEngine.Object[]  objects             { get; set; }    //返回选择的激活物体(Hierarchy、Project)
+public static Transform[]           transforms          { get; }         //返回选择的激活变换(Hierarchy) 
+</code></pre>
+<h2 id="3-方法">3、方法</h2>
+<pre><code>public static bool                  Contains        (int instanceID);                //返回一个instabceID是否包含在当前选择中
+public static bool                  Contains        (UnityEngine.Object obj);        //返回一个object是否包含在当前选择中
+public static UnityEngine.Object[]  GetFiltered     (Type type, SelectionMode mode); //通过Type和SelectionMode的方式筛选物体
+public static Transform[]           GetTransforms   (SelectionMode mode);            //通过SelectionMode筛选物体
+</code></pre>
+<p>在上面的方法中使用到了SelectionMode(选择模式)，那这里就列举下这个枚举类的内部选项</p>
+<pre><code>#region 程序集 UnityEditor.dll, v0.0.0.0 // ……\Library\UnityAssemblies\UnityEditor.dll
+#endregion
+using System;
+ 
+namespace UnityEditor
+{
+    // 摘要: 
+    //     SelectionMode can be used to tweak the selection returned by Selection.GetTransforms.
+    public enum SelectionMode
+    {
+        Unfiltered         = 0,    //整个选择(不过滤)
+        TopLevel           = 1,    //返回最顶层的
+        Deep               = 2,    //返回选择和选择的子物体
+        ExcludePrefab      = 4,    //排除Prefab
+        OnlyUserModifiable = 8,    //自有用户可更改的
+        Editable           = 8,    //可编辑的
+        Assets             = 16,   //资源
+        DeepAssets         = 32,   //资源和子目录
+    }
+}
+</code></pre>
+<p>以上便是Selection类的全部方法和属性简介，在后面的博客中，我们会给出一些使用示例和更详细的方法讲解，敬请期待！！！</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/112/">
+                  <h3 class="post-title">
+                    Unity扩展基础类方法
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

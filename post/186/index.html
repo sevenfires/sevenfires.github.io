@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>[USequencer系列之一]初识USequencer | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="一、引言
+现在几乎所有游戏开场过程中，通常都会有一段唯美的CG动画作为游戏的背景故事介绍。而如果能在游戏过程中也能使用CG动画做过场动画、游戏交通、衔接情节等，那就再好不过了。但现实往往是残酷的，纵观整个游戏圈，敢这么干的游戏公司屈指可数，..." />
+    <meta name="keywords" content="Sequencer,剧情,USequencer,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">[USequencer系列之一]初识USequencer</h2>
+            <div class="post-date">2016-08-14</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="一-引言">一、引言</h1>
+<p>现在几乎所有游戏开场过程中，通常都会有一段唯美的CG动画作为游戏的背景故事介绍。而如果能在游戏过程中也能使用CG动画做过场动画、游戏交通、衔接情节等，那就再好不过了。但现实往往是残酷的，纵观整个游戏圈，敢这么干的游戏公司屈指可数，CG高昂的制作费用不是每一个公司都能够承受的，当然过多的CG资源也会相应的增加包容量，这对移动游戏的包容量也是一个大大的挑战。<br>
+虽然在游戏过程中没法用CG做剧情动画，但如果能用现有游戏资源实时播放一段剧情，必要时还可以让玩家的角色参与其中也是一种很不错的选择。<br>
+对于一段完整的剧情动画通常需要包括：镜头切换、各种动画、炫丽特效、悦耳的声音、旁白字幕、交互UI等等。如果一段剧情只是简单的几个动作和特效，程序进行硬编码，也是很容易的实现的，比如BOSS死亡动画等。但如果需要控制大量角色的不同动作、特效、音效等同时播放，靠程序的硬编码就显得不那么实际了。复杂的剧情动画，自然需要高大上的工具来制作，人员当然要非专业的视频美术不可。</p>
+<h1 id="二-usequencer介绍">二、USequencer介绍</h1>
+<p>巧妇难为无米之炊，专业的视频美术如果没有专业的剧情编辑插件，面对Unity也是束手无策，无可奈何的(总不能还用Adobe After Effects，Unity对他可还不支持哦~)。正所谓好马配好鞍，专业的视频美术，当然也要使用专业视频插件，是不？今天我们就来介绍一款强大且专业的剧情编辑插件——USequencer，免去你从头设计、开发和修改无止境BUG的烦恼。如果你已经自己开发一个剧情插件！没关系，看看这款剧情插件是怎么实现的，取长补短，让你的工具/插件更上几个档次。</p>
+<p>至于为什么选择USequencer，这还得从他的特性上来说：</p>
+<ol>
+<li>事件、属性和相机控制都是基于时间轴设计的</li>
+<li>兼容所有的平台和Unity版本</li>
+<li>简单、直观和易用的用户交互界面</li>
+<li>各种可以直接使用的游戏事件</li>
+<li>直接兼容Playmaker和UScript</li>
+<li>支持Prefab保存</li>
+<li>非常简单、方便的添加自定义事件</li>
+<li>支持自定义事件显示界面</li>
+<li>不会给你的GameObject添加任何额外脚本</li>
+<li>支持Undo/Redo</li>
+<li>……</li>
+</ol>
+<p>USequencer在商店中有两个版本：无源码版$45(uSequencer Cutscene and Cinematic creator)和有源码版$90(Source uSequencer Cutscene and Cinematic creator)。推荐大家购买有源码版的，这样可以任意的定制化开发这款工具了，后续我也会发一篇博文来简单讲讲对这个工具的二次开发，让他变得更好用。</p>
+<p>另外还有官方体验版，地址在这：https://www.wellfired.com/usequencerdownload.html，一些官方示例：https://www.wellfired.com/usequencer.html#samples_tab。</p>
+<h1 id="三-usequencer主界面">三、USequencer主界面</h1>
+<p>购买、下载和安装的事情就自己去搞定了。</p>
+<p>对于USequence的基本使用和界面功能，可以在USequencer官方网站获得更多更详细的介绍，地址如下:https://www.wellfired.com/usequencer.html，在本文的最后，我会把USequencer的老版本入门教程pdf放到了Github上https://github.com/sevenfires/USequencerStudy.git，大家也可以自行下载下来学习研究，新版安装包里已经不包含教程了。</p>
+<h2 id="31主界面概览">3.1主界面概览</h2>
+<p>更详细的USequencer的入门介绍和教程请到官方网站查看，这里只对该插件进行简单介绍，抛砖引玉。<br>
+首先我们看下这款插件的主要工作面板，如下图所示，我已经在工作面板中添加了一些最基本的剧情要素。<br>
+ps:这是一个用原版Sequencer工具制作的一段剧情(不是一段真实的剧情，我只是用这个尽可能多的展示功能而已)。<br>
+<img src="https://www.7fires.cn/post-images/1606309029570.png" alt="" loading="lazy"><br>
+这是这个剧情插件的最基本操作界面,看到这个界面是不是很熟悉，是不是跟美术使用的Adobe After Effects的视频特效的时间轴看起来非常的相似。这是为了减少不同软件间的差异化，遵循美术的操作习惯、减少学习成本、方便剧情美术的使用而刻意设计的。当然市面上的几乎所有的剧情(视频)编辑的界面也都是这个样子，也没太多需要额外设计的。</p>
+<h1 id="32功能构成拆解">3.2功能构成拆解</h1>
+<p>接下来我们来简单介绍下这个界面里面的基本构成吧：<br>
+<img src="https://www.7fires.cn/post-images/1606309059439.png" alt="" loading="lazy"><br>
+在上面的图中，已经标识了每个区域的基本功能和名称。</p>
+<ul>
+<li>Observer：观察者，我称之为导播。他是每段剧情中默认自带的一个角色，不能删除，他的职责是控制当前屏幕上该显示几号相机的画面，没了他，也就没了画面，现在直播就没得看了(当然在我们项目的实际使用过程中，他是没有任何用的，因为只使用了一个相机，没得切，从头到尾就一个，然后这并不是我想要的，历史原因就不提了)。</li>
+<li>CameraMan：摄影师，负责抗着相机到处跑的拍摄画面等。</li>
+<li>LightingArtist：灯光师，负责给游戏的场景打光，烘托气氛，调整光效等。</li>
+<li>Hellephant：具体的一个演员，负责表演，摆POSS，跳舞，对话等。</li>
+<li>PropMaster：道具师，负责给场景摆道具，开门等等。</li>
+<li>EffectArtist：特效师，负责播放特效，放烟雾、打火花等等特效相关的。</li>
+<li>Locomotion：另一个演员</li>
+<li>……</li>
+</ul>
+<p>除了以上这些角色，你也可以为你的剧情新增其他角色来丰富你的剧情，再说这些角色都是我自己YY出来的，不是没一段剧情都需要这么干，而在我们的游戏中也不需要这样的分工明确，同样也可以一个角色干完所有人的活，只要你忙得过来。并且上面的这些角色对Unity来说只是不同的GameObject而已，选择分开还是合并全看你个人高兴了。<br>
+对于上面每一个角色的不同时间线上的待做事项，除了默认的切镜功能只有Observer能使用外，其他都是可以混合或单独使用的。具体有哪些呢？</p>
+<h3 id="321-属性时间线">3.2.1、属性时间线：</h3>
+<p>属性时间线是用来直接控制游戏物体的所有属性，可以使用动画曲线来控制所有东西。这点跟Animation动画一样，也是使用曲线和关键帧的方式控制每个角色(GameObject)的最基本属性：Transform、Material、Camera、Renderer等等；<br>
+<img src="https://www.7fires.cn/post-images/1606309138108.png" alt="" loading="lazy"></p>
+<h3 id="322-事件时间线">3.2.2、事件时间线：</h3>
+<p>用来添加和执行各种事件，是我们使用最多的时间线。在USequencer中已经提供了100多个不同种类的事件，我们可以直接使用这些事件完成很多的逻辑控制。事件时间线是一个万能的时间线，可以控制任何东西，但需要你自己花时间去开发他的无限可能；<br>
+<img src="https://www.7fires.cn/post-images/1606309155862.png" alt="" loading="lazy"></p>
+<h3 id="323-动画时间线">3.2.3、动画时间线：</h3>
+<p>是作者开发用来支持编辑、预览和播放Mecanim动画的时间线，只能用来控制Mecanim动画。目前这个还是Beta版，功能不是很稳定，所以通常会使用时间时间线的一些功能来替代他；<br>
+<img src="https://www.7fires.cn/post-images/1606309171312.png" alt="" loading="lazy"></p>
+<h3 id="324-路径时间线">3.2.4、路径时间线：</h3>
+<p>路径时间线允许你把一个物体沿着一个路径运动，通常用于相机的轨迹运动。</p>
+<h2 id="33剧情编辑运行预览">3.3剧情编辑运行预览</h2>
+<p>USequencer一个最强大的特点就是可以一边编辑剧情，一边预览剧情。只需拖动工作面板上时间轴上的小滑块就可以预览剧情的效果而又不用Play游戏，可以做到对动画、特效和事件逐帧预览，来回反复预览等等，功能很强大。这对提升美术的工作效率有非常大的帮助。我们后续还会讲到。<br>
+<img src="https://www.7fires.cn/post-images/1606309196021.gif" alt="" loading="lazy"></p>
+<h1 id="四-事件扩展">四、事件扩展</h1>
+<p>USequencer最强大的地方就是这个事件的扩展，通过这个扩展，我们几乎可以用事件来完成所有的事情，不论是播放Animation动画，还是Mecanim动画等通通都不在话下，也可以用来进行游戏逻辑的推进等，都非常的简便。下面具体来看看怎么扩展一个事件，本次使用的是一个控制时间缩放的事件，如下所示：</p>
+<pre><code>[USequencerFriendlyName(&quot;Time Scale&quot;)]//用来做事件的GameObject名称和剧情面板中的名字
+[USequencerEvent(&quot;Time/Time Scale&quot;)]//该事件的菜单Item
+[USequencerEventHideDuration()]//表示该事件是否为瞬时事件(有这个命令会被标识为瞬时事件，没有则为持续事件)
+public class USTimeScaleEvent : USEventBase
+{
+    public AnimationCurve scaleCurve = new AnimationCurve(new Keyframe(0.0f, 1.0f), new Keyframe(0.1f, 0.2f), new Keyframe(2.0f, 1.0f));
+    private float currentCurveSampleTime = 0.0f;
+    private float prevTimeScale = 1.0f;
+ 
+    //事件开始时执行，类似Enable，只执行一次
+    public override void FireEvent()
+    {
+        prevTimeScale = Time.timeScale;
+    }
+ 
+    //事件持续执行时调用，类似Update，多次执行
+    public override void ProcessEvent(float deltaTime)
+    {
+        currentCurveSampleTime = deltaTime;
+        Time.timeScale = Mathf.Max(0f, scaleCurve.Evaluate(currentCurveSampleTime));
+    }
+ 
+    //事件结束时执行，类似Disable，只执行一次
+    public override void EndEvent()
+    {
+        float sampleTime = scaleCurve.keys[scaleCurve.length - 1].time;
+        Time.timeScale = Mathf.Max(0f, scaleCurve.Evaluate(sampleTime));
+    }
+   
+    //事件被停止时执行，整个剧情Sequence被Stop时执行
+    public override void StopEvent()
+    {
+        UndoEvent();
+    }
+   
+    //事件被暂停时执行
+    public override void PauseEvent() {
+       
+    }
+   
+    //事件继续播放时执行
+    public override void ResumeEvent() {
+      
+    }
+ 
+    //事件被撤销时执行
+    public override void UndoEvent()
+    {
+        currentCurveSampleTime = 0.0f;
+        Time.timeScale = prevTimeScale;
+    }
+}
+</code></pre>
+<p>对于每个事件，FireEvent和ProcessEvent是必须要实现的，其他方法可选。</p>
+<p>建议通常情况下，除了上述两个事件外，EndEvent、StopEvent和UndoEvent都最好实现以下，用来对FireEvent和ProcessEvent进行逆操作，因为剧情很大一部分事件都是在不运行游戏下执行，如果不执行逆操作，运行几遍后，整个场景就真的惨不忍睹，编辑不下去了。比如某个事件创建了一个特效，没有在事件结束后删除这个特效，那么这个特效就会一直存在场景中，多执行几遍就多了多少特效在场景里，而美术会场景忘记删除的。当然如果是在运行时是不会有这种情况的，但运行时的编辑是没法保存的。</p>
+<h1 id="五-自定义界面">五、自定义界面</h1>
+<p>对于一个事件，我们实现了事件的功能后，基本上是可以撒手不管的，对于事件在Sequence的编辑界面上的显示，Sequence已经做好了默认的封装，上面会有事件的名字和相应的持续长度等。<br>
+但有时，在一段剧情中，一个事件被添加和多次，就有些难以区分这些相同的事件都分别干了些什么。比如播放特效，一段剧情播放了3个特效总共10次，10个事件都显示为播放特效，就很难分清哪个特效事件播放的是哪个特效。如果要替换其中一个特效，就需要把10个特效事件都看一遍才能找到需要被替换的特效事件，这非常的不方便。如果每个特效事件都能吧自己播放的特效名显示在编辑面板中，就方便多了。要达成这个效果，就不得不扩展EventEditor了。<br>
+EventEditor主要是用来自定义事件在Timeline上的显示内容。扩展如下：</p>
+<pre><code>[CustomUSEditor(typeof(USTimeScaleEvent))]
+public class USTimeScaleEventEditor : USEventBaseEditor
+{
+    public override Rect RenderEvent(Rect myArea)
+    {
+        USTimeScaleEvent timeScaleEvent = TargetEvent as USTimeScaleEvent;
+       
+        timeScaleEvent.Duration = timeScaleEvent.scaleCurve[timeScaleEvent.scaleCurve.length-1].time;
+       
+        if (timeScaleEvent.Duration &gt; 0)
+        {
+            float endPosition = ConvertTimeToXPos(timeScaleEvent.FireTime + timeScaleEvent.Duration);
+            myArea.width = endPosition - myArea.x;
+        }
+        DrawDefaultBox(myArea);
+ 
+        using(new WellFired.Shared.GUIBeginArea(myArea))
+        {
+            GUILayout.Label(GetReadableEventName(), DefaultLabel);
+        }
+ 
+        return myArea;
+    }
+   
+    //折叠模式下的自定义显示
+    public override void RenderCollapsedEvent( Rect area ) {
+        base.RenderCollapsedEvent (area);
+    }
+}
+</code></pre>
+<p>该类其他可被扩展的方法<br>
+<img src="https://www.7fires.cn/post-images/1606309276041.png" alt="" loading="lazy"><br>
+(在展开模式下，瞬时事件 会有一个固定的长度，而这个长度常常会跟持续事件弄混淆，偶尔会让美术分不清他们；在折叠模式下，瞬时事件和持续时间均显示为一个小竖条，同样也分不清哪些是瞬时事件，哪些是持续事件。不过没关系，在后面连载博文中我会教你们修改内部源码来纠正这样的问题)。</p>
+<h1 id="六-usequencer的优缺点">六、USequencer的优缺点</h1>
+<p>USequencer这款剧情插件，优点还是很多的！首先就是对GameObject属性的控制，可以像Unity的Animation动画一样通过关键帧动画控制GameObject的位置、旋转、数值变化、开关等，简直就是Animation的替代品；然后就是源生支持Mecanim动画系统，不论是简单的动画播放或者多层动画控制都是得心应手，信手拈来；其次当然是强大的事件系统，几乎可以控制所有的东西，无所不能；最后当然是USequencer可以直接在不Play的情况下预览剧情、播放动画和特效等，这极大的方便了美术的制作和使用，而对于那些与场景交互密切的剧情，就更加需要这个功能，想象一下不用每修改一次参数就要Play一下去看修改的对不对，靠的紧不紧等，Unity的特效不就是这样的么，哈哈~</p>
+<p>说完优点当然还要说一下缺点，首先依然还是属性控制，在保存为Prefab的时候，会生成很多的小文件，几乎是一个关键帧对应一个小文件，对项目目录结构不友好，保存完后从新打开需要一个个的解析这些小文件，还常常失败，导致要重新制作等；然后就是源生的播放Mecanim那套东西，也常常出各种问题，不是Animator找不到，就是Animation找不到，一些动画控制器状态的增删改查也会引起做好的剧情打不开等等；其次是事件系统，这个到没出什么BUG，只是原版的瞬时事件和持续事件在原版默认情况下显示不够准确，有时会造成美术的误读等，事件系统除了这个就没有其他问题，最后还是编辑模式下的预览，编辑模式下，毕竟不具备我们游戏运行时所需要的那些环境(比如当前玩家Animator)，也因此我们常常要写两份代码，一份在编辑时执行，一份在运行时执行，这点非常的考验人。</p>
+<p>看到前面那大段的缺点，是不是有种被欺骗的感觉。问题这么多，为啥还要推荐给你们。其实这些缺点或者问题在对比完其他的剧情插件后，这些都不是问题。一个功能强大、易用，有点小毛病的与一个功能简单、不易使用及维护的相比，我还是毅然的选择了前者。而且时间和实践告诉我当初的选择没有错，USequencer的那些小毛病要么可以轻易规避，要么就是简单修改后就永远正常了。</p>
+<p>就我们项目，截止目前为止，已经使用USequencer插件制作出了超过150段剧情，总时间已经超过2000s，而且USequencer插件现在已经不仅限于制作游戏剧情，我们现在的一些对内对外的宣传视频，也是用USequencer编辑的，未来也许还会用这个修改过后的USequencer做一些连载视频或动画片等。</p>
+<h1 id="七-未尽事宜">七、未尽事宜</h1>
+<p>作为一款插件，USequence绝对是一款会让你又爱又恨的插件。爱他的整个框架结构，非常强大、非常复杂，但修改和新增功能真的很简单(只要你能看懂和明白他里面的结构)，恨他明明可以做得更好更漂亮更实用，但他却没有这样做。</p>
+<p>另外对于USequencer的那些问题及相关修改方法，我会在后续的博文中慢慢讲解。最后附上一张目前使用的USequencer的截图，就是我们修改后的结果：<br>
+<img src="https://www.7fires.cn/post-images/1606309325036.png" alt="" loading="lazy"></p>
+<h1 id="八-初次导入时的一些问题">八、初次导入时的一些问题</h1>
+<p>从商店购买下载好该插件后，导入现有的工程，这里有两步需要注意。<br>
+1、不要使用默认弹出的导入框导入插件，不管怎么导都会有问题<br>
+<img src="https://www.7fires.cn/post-images/1606309342838.png" alt="" loading="lazy"></p>
+<p>2、插件文件下的两个.unitypackage文件都要导入<br>
+<img src="https://www.7fires.cn/post-images/1606309361114.png" alt="" loading="lazy"></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/Zst5GVmKN/" class="tag">
+                    Sequencer
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/_IEhCi0U7a/" class="tag">
+                    剧情
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/BdyO28Upxo/" class="tag">
+                    USequencer
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/179/">
+                  <h3 class="post-title">
+                    Unity Editor 10行代码搞定Hierarchy排序
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

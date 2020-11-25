@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>七火小窝</title>
+<title>Unity 特殊文件夹及脚本编译顺序 | 七火小窝</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,8 +18,10 @@
 
 
 
-    <meta name="description" content="温故而知新">
-    
+    <meta name="description" content="一、特殊文件夹
+通常我们会为我们创建的文件夹去上任何喜欢的名称，但是有一些文件夹名称会被Unity解释为一个指令，文件夹中的内容会被Unity特殊对待。例如，必须将编辑器脚本放置在名为Editor的文件夹中，这样这些脚本才能正常运行。
+1...." />
+    <meta name="keywords" content="Unity" />
   </head>
   <body>
     <div id="app" class="main">
@@ -89,17 +91,12 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://www.7fires.cn/post/217/">
-                  <h2 class="post-title">Unity 特殊文件夹及脚本编译顺序</h2>
-                </a>
-                <div class="post-date">
-                  2017-04-17
-                </div>
-                <div class="post-abstract">
-                  <h1 id="一-特殊文件夹">一、特殊文件夹</h1>
+          <div class="post-detail">
+            <h2 class="post-title">Unity 特殊文件夹及脚本编译顺序</h2>
+            <div class="post-date">2017-04-17</div>
+            
+            <div class="post-content" v-pre>
+              <h1 id="一-特殊文件夹">一、特殊文件夹</h1>
 <p>通常我们会为我们创建的文件夹去上任何喜欢的名称，但是有一些文件夹名称会被Unity解释为一个指令，文件夹中的内容会被Unity特殊对待。例如，必须将编辑器脚本放置在名为Editor的文件夹中，这样这些脚本才能正常运行。</p>
 <h2 id="11-assets">1.1、Assets</h2>
 <p>该文件夹是Unity工程使用到的资源的根目录。编辑器中，Project窗口直接一一对应的显示这个目录下的资源。大多数的API函数都是假定一切都是位于Assets文件夹中的，我们不需要明确的提及它。但是某些函数需要将Assets文件夹作为路径名的一部分（例如AssetDatabase中的某些函数）。</p>
@@ -129,155 +126,89 @@ Unity中的大多数资源在构建的就合并到项目中了。但是，将文
 </code></pre>
 <p>在Android中，使用</p>
 <pre><code>path = &quot;jar:file://&quot; + Application.dataPath + &quot;!/assets/&quot;;
+
+&lt;!-- more --&gt;
 </code></pre>
+<p>在Android上，文件包含在压缩的.jar文件中，这意味着如果不使用Unity的WWW类来检索文件，我们就需要使用额外的软件来查看.jar文件内部。</p>
+<p>注意：位于StreamingAssets目录中的.dll文件不参与编译。</p>
+<p>##1.9、Hidden Assets<br>
+在导入过程中，Unity完全忽略Assets目录中（或其中的子目录）中的以下文件和文件夹：</p>
+<ul>
+<li>隐藏的目录</li>
+<li>以‘.’开头的文件和目录</li>
+<li>以‘~’结尾的文件和目录</li>
+<li>名为cvs的文件和目录</li>
+<li>扩展名为.tmp的文件<br>
+这是用于防止导入操作系统或其他应用程序创建的特殊和临时文件。</li>
+</ul>
+<h1 id="二-脚本编译顺序">二、脚本编译顺序</h1>
+<p>Unity保留了一些项目文件夹名称来标识其内的内容具有一些特殊目的。而其中一些文件夹会影响脚本编译的编译顺序。这些文件夹名称是：</p>
+<ul>
+<li>
+<p>Assets</p>
+</li>
+<li>
+<p>Editor</p>
+</li>
+<li>
+<p>Editor default resources</p>
+</li>
+<li>
+<p>Gizmos</p>
+</li>
+<li>
+<p>Plugins</p>
+</li>
+<li>
+<p>Resources</p>
+</li>
+<li>
+<p>Standard Assets</p>
+</li>
+<li>
+<p>StreamingAssets<br>
+脚本编译有四个不同的阶段。处于哪个阶段编译由其父目录确定。<br>
+在脚本必须引用其他脚本中定义的类容的情况下，编译的顺序就非常重要了。基本规则是，在当前阶段之后编译的任何东西都引用不到，在当前阶段之前或早期的阶段编译的任何内容都可以完全引用。<br>
+编译阶段如下：</p>
+</li>
+<li>
+<p>阶段1：编译Standard Assets、Plugin中的运行时脚本</p>
+</li>
+<li>
+<p>阶段2：编译Standard Assets、Plugin中的Editor脚本</p>
+</li>
+<li>
+<p>阶段3：编译其他不在Editor目录下的脚本</p>
+</li>
+<li>
+<p>阶段4：编译Editor目录下的脚本</p>
+</li>
+</ul>
 
-                </div>
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
               </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
                 <a href="https://www.7fires.cn/post/210/">
-                  <h2 class="post-title">[USequencer系列之三]缤纷事件、事件间吸附</h2>
+                  <h3 class="post-title">
+                    [USequencer系列之三]缤纷事件、事件间吸附
+                  </h3>
                 </a>
-                <div class="post-date">
-                  2017-02-16
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
               </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://www.7fires.cn/post/203/">
-                  <h2 class="post-title">【合并Shader】合并渲染状态</h2>
-                </a>
-                <div class="post-date">
-                  2017-01-20
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://www.7fires.cn/post/199/">
-                  <h2 class="post-title">【USequencer系列之二】准确显示瞬时事件和持续事件</h2>
-                </a>
-                <div class="post-date">
-                  2016-09-30
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://www.7fires.cn/post/186/">
-                  <h2 class="post-title">[USequencer系列之一]初识USequencer</h2>
-                </a>
-                <div class="post-date">
-                  2016-08-14
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://www.7fires.cn/post/179/">
-                  <h2 class="post-title">Unity Editor 10行代码搞定Hierarchy排序</h2>
-                </a>
-                <div class="post-date">
-                  2016-07-09
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://www.7fires.cn/post/174/">
-                  <h2 class="post-title">Unity3D Shader加载时机和预编译</h2>
-                </a>
-                <div class="post-date">
-                  2016-07-06
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://www.7fires.cn/post/165/">
-                  <h2 class="post-title">MaterialPropertyDrawer自定义Unity材质Inspector之关键字枚举(KeywordEnum)</h2>
-                </a>
-                <div class="post-date">
-                  2016-01-11
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://www.7fires.cn/post/161/">
-                  <h2 class="post-title">MaterialPropertyDrawer自定义Unity材质Inspector之枚举类型(Enum)</h2>
-                </a>
-                <div class="post-date">
-                  2016-01-08
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://www.7fires.cn/post/155/">
-                  <h2 class="post-title">删除Prefab或场景物件有脚本缺失的组件</h2>
-                </a>
-                <div class="post-date">
-                  2015-12-30
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
+            
 
-          <div class="pagination-container">
-  
-  
-    <a href="https://www.7fires.cn/page/2" class="next">下一页 <i class="icon-arrow-ios-forward-outline"></i></a>
-  
-</div>
+            
+
+          </div>
 
         </div>
       </div>

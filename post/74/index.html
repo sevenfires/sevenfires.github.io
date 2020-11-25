@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>UnityEditor之PrefabType枚举类解析 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="PrefabType预制类型，是预制物体的类型，由PrefabType 预置类型，
+由EditorUtility.GetPrefabType返回。是一个编辑器类
+新版已使用PrefabUtility.GetPrefabType来代替，示例如..." />
+    <meta name="keywords" content="UnityEditor,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">UnityEditor之PrefabType枚举类解析</h2>
+            <div class="post-date">2015-05-18</div>
+            
+            <div class="post-content" v-pre>
+              <p>PrefabType预制类型，是预制物体的类型，由PrefabType 预置类型，<br>
+由EditorUtility.GetPrefabType返回。是一个编辑器类<br>
+新版已使用PrefabUtility.GetPrefabType来代替，示例如下：<br>
+PrefabUtility.GetPrefabType(go) != PrefabType.Prefab</p>
+<p>PrefabType 预置类型</p>
+<ul>
+<li>None<br>
+The object is not a prefab nor an instance of a prefab.<br>
+物体不是一个预制，也不是一个预制的实例。</li>
+<li>Prefab<br>
+The object is a user created prefab asset.<br>
+物体是用户创建的预置资源。</li>
+<li>ModelPrefab<br>
+The object is an imported 3D model asset.<br>
+物体是一个导入到3D模型资源。</li>
+<li>PrefabInstance<br>
+The object is an instance of a user created prefab.<br>
+物体是一个用户创建的预置的实例。</li>
+<li>ModelPrefabInstance<br>
+The object is an instance of an imported 3D model.<br>
+物体是一个导入3D模型预置的实例。</li>
+<li>MissingPrefabInstance<br>
+The object was an instance of a prefab, but the original prefab could not be found.<br>
+物体是一个预置的实例，但是源预置没有发现。</li>
+<li>DisconnectedPrefabInstance<br>
+The object is an instance of a user created prefab, but the connection is broken.<br>
+物体是用户创建的预置的实例，但连接断开。</li>
+<li>DisconnectedModelPrefab…<br>
+The object is an instance of an imported 3D model, but the connection is broken.<br>
+物体是一个导入3D模型的实例，但连接断开。</li>
+</ul>
+<p>可以使用这样的方式来判断美术在Unity编辑器中选择的是什么类型的物体</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/22/">
+                  <h3 class="post-title">
+                    Unity Shader 之 vertex and fragment 概览
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>

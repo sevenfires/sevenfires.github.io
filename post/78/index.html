@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>UnityEditor之MenuItem快捷键 | 七火小窝</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://www.7fires.cn/favicon.ico?v=1606312399689">
+<link rel="stylesheet" href="https://www.7fires.cn/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="MenuItem支持自定义创建快捷键
+MenuItem 菜单项可以使用一下指定字符创建热键：
+%(Windows上为ctrl, OS X上为cmd),
+#(shift),
+&amp;(alt), _ (无修改键)。
+例如创建一个菜单热键为s..." />
+    <meta name="keywords" content="UnityEditor,Unity" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://www.7fires.cn">
+        <img src="https://www.7fires.cn/images/avatar.png?v=1606312399689" class="site-logo">
+        <h1 class="site-title">七火小窝</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      温故而知新
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://www.7fires.cn/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">UnityEditor之MenuItem快捷键</h2>
+            <div class="post-date">2015-05-18</div>
+            
+            <div class="post-content" v-pre>
+              <p>MenuItem支持自定义创建快捷键<br>
+MenuItem 菜单项可以使用一下指定字符创建热键：<br>
+%(Windows上为ctrl, OS X上为cmd),<br>
+#(shift),<br>
+&amp;(alt), _ (无修改键)。<br>
+例如创建一个菜单热键为shift-alt-g使用GameObject/Do Something #&amp;g。创建一个菜单热键g并没有修改键（组合键），使用GameObject/Do Something _g。热键文本必须在前面加一个空格字符（GameObject/Do_g不会被解释为热键，而是GameObject/Do _g这样，注意_g前面有空格）。</p>
+<pre><code>// C# example:
+using UnityEditor;
+using UnityEngine;
+class MenuTest : MonoBehaviour {
+	// Add menu named &quot;Do Something&quot; to the main menu
+	//添加菜单名为Do Something 到主菜单
+	[MenuItem (&quot;GameObject/Do Something&quot;)]
+	static void DoSomething () {
+		Debug.Log (&quot;Perform operation&quot;);
+	}
+ 
+	// Validate the menu item.
+	//验证菜单项。
+	// The item will be disabled if no transform is selected.
+	//如果没有变换被选择，该项将是禁用的。
+	[MenuItem (&quot;GameObject/Do Something&quot;, true)]
+	static bool ValidateDoSomething () {
+		return Selection.activeTransform != null;
+	}
+ 
+	// Add menu named &quot;Do Something&quot; to the main menu
+	//添加菜单名为Do Something 到主菜单
+	// and give it a shortcut (ctrl-o on Windows, cmd-o on OS X).
+	//并且指定快捷键（windows为ctrl-o，OS X为cmd-o）
+	[MenuItem (&quot;GameObject/Do Something %o&quot;)]
+	static void DoSomething () {
+		Debug.Log (&quot;Perform operation&quot;);
+	}
+ 
+	// Add context menu named &quot;Do Something&quot; to rigid body's context menu
+	//添加上下文菜单名为Do Something 到刚体的上下文菜单
+	[MenuItem (&quot;CONTEXT/Rigidbody/Do Something&quot;)]
+	static void DoSomething (MenuCommand command) {
+		Rigidbody body = (Rigidbody)command.context;
+		body.mass = 5;
+	}
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://www.7fires.cn/tag/dgOdvSh7i/" class="tag">
+                    UnityEditor
+                  </a>
+                
+                  <a href="https://www.7fires.cn/tag/nO4r1-UC27/" class="tag">
+                    Unity
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://www.7fires.cn/post/74/">
+                  <h3 class="post-title">
+                    UnityEditor之PrefabType枚举类解析
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+
+  </body>
+</html>
