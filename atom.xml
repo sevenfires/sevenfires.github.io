@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.7fires.cn</id>
     <title>七火小窝</title>
-    <updated>2020-11-25T14:08:42.681Z</updated>
+    <updated>2020-11-25T14:20:00.658Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.7fires.cn"/>
     <link rel="self" href="https://www.7fires.cn/atom.xml"/>
@@ -224,7 +224,7 @@ EventEditor.cs<br>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[【合并Shader】合并渲染状态]]></title>
+        <title type="html"><![CDATA[[合并Shader]合并渲染状态]]></title>
         <id>https://www.7fires.cn/post/203/</id>
         <link href="https://www.7fires.cn/post/203/">
         </link>
@@ -415,7 +415,7 @@ public enum BlendMode
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[【USequencer系列之二】准确显示瞬时事件和持续事件]]></title>
+        <title type="html"><![CDATA[[USequencer系列之二]准确显示瞬时事件和持续事件]]></title>
         <id>https://www.7fires.cn/post/199/</id>
         <link href="https://www.7fires.cn/post/199/">
         </link>
@@ -823,7 +823,7 @@ public class USTimeScaleEventEditor : USEventBaseEditor
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Unity3D Shader加载时机和预编译]]></title>
+        <title type="html"><![CDATA[Unity Shader 之 加载时机和预编译]]></title>
         <id>https://www.7fires.cn/post/174/</id>
         <link href="https://www.7fires.cn/post/174/">
         </link>
