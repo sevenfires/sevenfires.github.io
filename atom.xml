@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.7fires.cn</id>
     <title>七火小窝</title>
-    <updated>2020-11-25T10:15:38.234Z</updated>
+    <updated>2020-11-25T10:19:31.426Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.7fires.cn"/>
     <link rel="self" href="https://www.7fires.cn/atom.xml"/>
@@ -10,6 +10,31 @@
     <logo>https://www.7fires.cn/images/avatar.png</logo>
     <icon>https://www.7fires.cn/favicon.ico</icon>
     <rights>All rights reserved 2020, 七火小窝</rights>
+    <entry>
+        <title type="html"><![CDATA[555]]></title>
+        <id>https://www.7fires.cn/post/555/</id>
+        <link href="https://www.7fires.cn/post/555/">
+        </link>
+        <updated>2020-11-25T10:19:17.000Z</updated>
+        <content type="html"><![CDATA[<p>retret<br>
+rtey<br>
+tr<br>
+y<br>
+tr<br>
+y</p>
+<p>try</p>
+<p>tr<br>
+y<br>
+try<br>
+rt<br>
+y<br>
+rt<br>
+y<br>
+rt<br>
+y<br>
+rt</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[iiii]]></title>
         <id>https://www.7fires.cn/post/iiii/</id>
